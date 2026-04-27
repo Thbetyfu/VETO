@@ -1,6 +1,6 @@
 # 🚀 Roadmap Pengembangan: President Simulator (Web 4.0)
 
-Dokumen ini merangkum langkah strategis pengembangan **JUSTICE CORE: President Simulator**, sebuah platform pembelajaran hukum berbasis desentralisasi dan AI lokal.
+Dokumen ini merangkum langkah strategis pengembangan **VETO: President Simulator**, sebuah platform pembelajaran hukum berbasis desentralisasi dan AI lokal.
 
 ---
 

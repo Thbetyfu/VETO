@@ -4,7 +4,7 @@ import { Scale, Users, ShieldAlert, Wallet } from 'lucide-react';
 
 /**
  * @function App
- * @description Komponen utama JUSTICE CORE - Prototipe UI Fase 3.
+ * @description Komponen utama VETO - Prototipe UI Fase 3.
  */
 function App() {
   const [day, setDay] = useState(1);
@@ -42,7 +42,7 @@ function App() {
               Day {day}
             </div>
 
-            <h2 className="text-xl font-bold mb-4 text-president-gold">Laporan Krisis Pagi</h2>
+            <h2 className="text-xl font-bold mb-4 text-president-gold">Laporan Veto Pagi</h2>
             <p className="text-slate-300 leading-relaxed mb-8">
               "Bapak Presiden, terjadi polemik mengenai Dana BOS di wilayah Timur. Apakah kita harus segera melakukan audit menyeluruh atau memberikan toleransi sementara?"
             </p>
@@ -64,7 +64,7 @@ function App() {
 
       {/* Footer Info */}
       <footer className="fixed bottom-6 text-slate-500 text-xs uppercase tracking-[0.2em]">
-        JUSTICE CORE v0.1 | Decentralized Authority
+        VETO v0.1 | Decentralized Authority
       </footer>
     </div>
   );

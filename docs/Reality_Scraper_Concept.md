@@ -1,6 +1,6 @@
 # 🌐 Concept: The Reality Scraper (Adaptive Narrative Engine)
 
-Ide Anda untuk melakukan scraping berita otomatis dan mengubahnya menjadi skenario (JSON) adalah langkah menuju **Web 4.0 "Live Intelligence"**. Ini akan membuat *President Simulator* selalu relevan dengan isu dunia nyata.
+Ide Anda untuk melakukan scraping berita otomatis dan mengubahnya menjadi skenario (JSON) adalah langkah menuju **Web 4.0 "Live Intelligence"**. Ini akan membuat **VETO** selalu relevan dengan isu dunia nyata.
 
 ---
 
@@ -32,4 +32,4 @@ graph LR
 Kita bisa menggunakan **GitHub Actions** atau **Vercel Cron Jobs** untuk menjalankan skrip scraper ini setiap 24 jam.
 
 > [!NOTE]
-> **Professor S3 Advice**: "Efek kejut (Surprise Factor) bagi siswa ketika mereka melihat berita pagi ini sudah ada di dalam game siang ini adalah WOW factor yang akan membuat JUSTICE CORE viral di kalangan akademisi."
+> **Professor S3 Advice**: "Efek kejut (Surprise Factor) bagi siswa ketika mereka melihat berita pagi ini sudah ada di dalam game siang ini adalah WOW factor yang akan membuat VETO viral di kalangan akademisi."

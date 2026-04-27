@@ -6,7 +6,7 @@ import 'gun/lib/rql';
 
 /**
  * @file gun-bridge.js
- * @description Inisialisasi GunDB untuk JUSTICE CORE.
+ * @description Inisialisasi GunDB untuk VETO.
  * Mendukung penyimpanan lokal (IndexedDB) dan sinkronisasi P2P.
  */
 
@@ -29,7 +29,7 @@ export const db = gun;
  * @param {object} stats - { law, humanity, order, budget }
  */
 export const syncPlayerStats = (userId, stats) => {
-  const playerNode = db.get('justice/users').get(userId);
+  const playerNode = db.get('veto/users').get(userId);
   playerNode.get('current_stats').put(stats);
   
   // Mencatat timestamp aktivitas terakhir
@@ -42,7 +42,7 @@ export const syncPlayerStats = (userId, stats) => {
  * @param {number} choiceIndex 
  */
 export const recordGlobalChoice = (scenarioId, choiceIndex) => {
-  const statsNode = db.get('justice/global_stats').get('choices').get(scenarioId);
+  const statsNode = db.get('veto/global_stats').get('choices').get(scenarioId);
   
   // Increment counter menggunakan sistem Gun.node()
   statsNode.get(choiceIndex).once((val) => {

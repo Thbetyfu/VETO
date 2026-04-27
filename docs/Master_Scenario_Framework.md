@@ -1,6 +1,6 @@
 # 📄 Master Scenario Framework (Fase 1)
 
-Dokumen ini mendefinisikan struktur data untuk setiap kartu skenario dalam **President Simulator**. Setiap kartu harus memiliki keseimbangan antara narasi emosional dan konsekuensi teknis.
+Dokumen ini mendefinisikan struktur data untuk setiap kartu skenario dalam **VETO**. Setiap kartu harus memiliki keseimbangan antara narasi emosional dan konsekuensi teknis.
 
 ---
 

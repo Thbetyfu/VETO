@@ -1,18 +1,16 @@
-# 🏗️ GunDB Schema Design (Fase 2)
-
-Dokumen ini menjelaskan arsitektur **P2P Graph** yang digunakan untuk JUSTICE CORE. GunDB dipilih karena sifatnya yang *offline-first* dan tidak memerlukan server pusat (Decentralized).
+Dokumen ini menjelaskan arsitektur **P2P Graph** yang digunakan untuk VETO. GunDB dipilih karena sifatnya yang *offline-first* dan tidak memerlukan server pusat (Decentralized).
 
 ---
 
 ## 1. Global Graph Structure
 Data dibagi menjadi beberapa *root nodes* utama:
 
-### A. `justice/scenarios` (Content Library)
+### A. `veto/scenarios` (Content Library)
 Kumpulan kartu skenario yang disinkronkan secara global.
 - **Key**: Scenario ID (e.g., `SCN-001`)
 - **Value**: Scenario Object (Metadata & Options)
 
-### B. `justice/users` (Player States)
+### B. `veto/users` (Player States)
 Berisi data anonim pemain yang disinkronkan untuk statistik.
 - **Node**: `user_id` (DIDs)
 - **Properties**:
@@ -20,7 +18,7 @@ Berisi data anonim pemain yang disinkronkan untuk statistik.
     - `day_count`: Integer
     - `history`: Linked list of [ScenarioID, ChoiceIndex]
 
-### C. `justice/global_stats` (Collective Intelligence)
+### C. `veto/global_stats` (Collective Intelligence)
 Node agregasi untuk fitur perbandingan keputusan.
 - **Key**: `choice_stats/[ScenarioID]/[ChoiceIndex]`
 - **Value**: Counter (Integer) yang bertambah setiap kali pemain memilih opsi tersebut.
@@ -42,7 +40,7 @@ const gun = Gun(['https://relay-peer.yourdomain.com/gun']);
 
 // Menyimpan keputusan pemain
 const saveDecision = (userId, scenarioId, choiceIndex) => {
-  const user = gun.get('justice/users').get(userId);
+  const user = gun.get('veto/users').get(userId);
   
   // Update history
   user.get('history').set({
@@ -52,7 +50,7 @@ const saveDecision = (userId, scenarioId, choiceIndex) => {
   });
 
   // Update Global Counter
-  gun.get('justice/global_stats')
+  gun.get('veto/global_stats')
      .get('choice_stats')
      .get(scenarioId)
      .get(choiceIndex)

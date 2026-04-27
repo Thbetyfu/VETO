@@ -1,4 +1,4 @@
-# President Simulator: Hukum & Moral
+# VETO: Hukum & Moral (President Simulator)
 
 **President Simulator** adalah sebuah permainan simulasi berbasis web (PWA) yang dirancang khusus untuk siswa SMP dan SMA. Dalam game ini, pemain berperan sebagai Presiden yang baru dilantik dan harus membuat keputusan-keputusan krusial di bidang hukum dan moral untuk menjaga stabilitas negara.
 

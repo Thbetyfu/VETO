@@ -1,4 +1,4 @@
-# 🏛️ Arsitektur JUSTICE CORE: Narrative-First & Zero-Friction
+# 🏛️ Arsitektur VETO: Narrative-First & Zero-Friction
 
 ## 1. Filosofi Desain: Kecepatan & Kedalaman
 Arsitektur JUSTICE CORE memprioritaskan **kecepatan akses (Zero-Friction)** dan **kedalaman narasi (Narrative-First)** di atas protokol konvensional. Sistem dirancang agar pengguna dapat langsung menduduki kursi kepemimpinan tanpa hambatan teknis yang berarti.
