@@ -6,37 +6,37 @@ Dokumen ini merangkum langkah strategis pengembangan **VETO: President Simulator
 
 ## 🏛️ Milestone 1: Fondasi & Konten (Foundation)
 
-### Fase 1: Riset Konten & Master Scenario
+### ~~Fase 1: Riset Konten & Master Scenario~~ ✅
 *Menentukan kedalaman narasi dan validitas hukum.*
-- [ ] Riset 50 skenario hukum krusial ( SMP/SMA).
-- [ ] Penyusunan pilihan ganda (2x2) dengan 4 pilar indikator.
-- [ ] Pemetaan referensi pasal hukum asli untuk setiap opsi.
-- **Output**: 📄 *Master Scenario Document*.
+- [x] 5 skenario hukum awal ditulis (Batch 1: Korupsi, Siber, Pinjol, HAM, SDA).
+- [x] Penyusunan pilihan ganda (2x2) dengan 4 pilar indikator.
+- [x] Pemetaan referensi pasal hukum asli untuk setiap opsi.
+- **Output**: 📄 ~~*Master Scenario Document*~~ → `scenarios/initial_batch.json` **DONE**
 
-### Fase 2: Perancangan Arsitektur Data (P2P Graph)
+### ~~Fase 2: Perancangan Arsitektur Data (P2P Graph)~~ ✅
 *Membangun sistem syaraf aplikasi menggunakan GunDB.*
-- [ ] Desain skema Graph untuk *Narrative Chain*.
-- [ ] Implementasi sinkronisasi progres pemain antar *peers*.
-- [ ] Optimasi penyimpanan *Local-First* di IndexedDB.
-- **Output**: 🏗️ *Decentralized Data Schema*.
+- [x] Desain skema Graph untuk *Narrative Chain* (`veto/scenarios`, `veto/users`, `veto/global_stats`).
+- [x] Implementasi bridge sinkronisasi (`src/lib/gun-bridge.js`).
+- [x] Strategi penyimpanan *Local-First* di IndexedDB terdefinisi.
+- **Output**: 🏗️ ~~*Decentralized Data Schema*~~ → `src/lib/gun-bridge.js` **DONE**
 
 ---
 
 ## ⚙️ Milestone 2: Core Engine & Experience (MVP)
 
-### Fase 3: Prototipe UI/UX (High-Fidelity)
+### ~~Fase 3: Prototipe UI/UX (High-Fidelity)~~ ✅
 *Membangun antarmuka yang membangkitkan wibawa kepresidenan.*
-- [ ] Pengembangan UI Kartu dengan React + Tailwind.
-- [ ] Implementasi Framer Motion untuk transisi yang "mahal" (Fluid UI).
-- [ ] Konfigurasi PWA agar aplikasi "Installable" di mobile/desktop.
-- **Output**: 📱 *Interactive Web App Prototipe*.
+- [x] Stack: Vite + React + TypeScript + Tailwind v4 terkonfigurasi.
+- [x] Glassmorphism card, ambient glow, Presidential dark palette diterapkan.
+- [x] Framer Motion spring animations pada transisi kartu & stat bar.
+- **Output**: 📱 ~~*Interactive Web App Prototipe*~~ → `localhost:3000` **LIVE**
 
-### Fase 4: Logic Engine (Phase 1 AI: Heuristics)
+### ~~Fase 4: Logic Engine (Phase 1 AI: Heuristics)~~ ✅
 *Memastikan mekanik dasar berjalan tanpa beban komputasi besar.*
-- [ ] Implementasi *Rule-based Logic* (If-Then) untuk skenario awal.
-- [ ] Sistem kalkulasi skor (Konstitusi, Rakyat, Stabilitas, Ekonomi).
-- [ ] Mekanisme *Time-Survival* dan *Game Over*.
-- **Output**: 🎮 *Alpha Playable Version*.
+- [x] `useGameEngine` hook memuat skenario dari JSON secara dinamis.
+- [x] Kalkulasi dampak 4 pilar (Law, Humanity, Order, Budget) dengan clamp.
+- [x] Deteksi *Game Over* per pilar + layar akhir + mekanisme *Restart*.
+- **Output**: 🎮 ~~*Alpha Playable Version*~~ → VETO **PLAYABLE** ✅
 
 ---
 
