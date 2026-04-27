@@ -39,3 +39,18 @@ export interface GameState {
   gameOverReason: string;
   history: Array<{ scenarioId: string; choiceLabel: string }>;
 }
+
+/** Status lifecycle model WebLLM. */
+export type AIStatus =
+  | 'idle'        // Belum dimuat sama sekali
+  | 'loading'     // Sedang mengunduh model di background
+  | 'ready'       // Model siap digunakan (Hot-Swap aktif)
+  | 'generating'  // Sedang menghasilkan analisis
+  | 'error';      // WebGPU tidak tersedia atau model gagal dimuat
+
+/** Output analisis moral dari AI. */
+export interface AIFeedbackData {
+  tone: 'praise' | 'neutral' | 'critique';
+  message: string;
+  moralProfile: string; // Contoh: "Pragmatik-Humanis"
+}

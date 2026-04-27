@@ -1,18 +1,44 @@
+import { useEffect } from 'react';
 import { Scale, Users, ShieldAlert, Wallet } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useGameEngine } from './hooks/useGameEngine';
+import { useWebLLM } from './hooks/useWebLLM';
 import { ScenarioCard } from './components/ScenarioCard';
 import { StatItem } from './components/StatItem';
 import { GameOverScreen } from './components/GameOverScreen';
+import { AIFeedback } from './components/AIFeedback';
+import type { ScenarioOption } from './types/scenario';
 
 /**
  * @function App
- * @description Orchestrator utama VETO. Hanya bertanggung jawab merakit
- * komponen dan menghubungkan event ke engine — tidak mengandung logika bisnis.
+ * @description Orchestrator utama VETO. Merakitkan Game Engine + WebLLM
+ * dan menghubungkan event ke setiap layer.
+ *
+ * MENGAPA hot-swap dilakukan di sini:
+ * useWebLLM.initModel() dipanggil via useEffect saat mount — ini adalah
+ * "Opportunistic Loading" sesuai Fase 6 Prologue strategy. Pemain sudah
+ * bisa bermain (Fase 4 Heuristics) sementara model dimuat diam-diam.
  */
 function App() {
   const { state, makeChoice, restartGame } = useGameEngine();
-  const { stats, day, currentScenario, isGameOver, gameOverReason } = state;
+  const { status: aiStatus, loadProgress, feedback, initModel, generateFeedback, clearFeedback } = useWebLLM();
+  const { stats, day, currentScenario, isGameOver, gameOverReason, history } = state;
+
+  // Mulai muat model AI di background saat app pertama dibuka
+  useEffect(() => {
+    initModel();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /**
+   * Handler pilihan — menggabungkan Game Engine + AI.
+   * Alur: pilih → hitung skor → koreksi state → minta komentar AI.
+   */
+  const handleChoice = async (option: ScenarioOption) => {
+    clearFeedback();
+    makeChoice(option);
+    // Jalankan AI analysis setelah state update (tidak blocking)
+    await generateFeedback(option, stats, day, history.length);
+  };
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4">
@@ -40,18 +66,28 @@ function App() {
               <GameOverScreen reason={gameOverReason} day={day} onRestart={restartGame} />
             </motion.div>
           ) : (
-            currentScenario && (
-              <motion.div key="gameplay" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                <ScenarioCard scenario={currentScenario} day={day} onChoice={makeChoice} />
-              </motion.div>
-            )
+            <motion.div key="gameplay" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              {currentScenario && (
+                <ScenarioCard
+                  scenario={currentScenario}
+                  day={day}
+                  onChoice={handleChoice}
+                />
+              )}
+              {/* Panel Analisis AI — muncul di bawah kartu setelah pilihan */}
+              <AIFeedback
+                feedback={feedback}
+                status={aiStatus}
+                loadProgress={loadProgress}
+              />
+            </motion.div>
           )}
         </AnimatePresence>
       </main>
 
       {/* Footer */}
       <footer className="fixed bottom-4 text-slate-600 text-[10px] uppercase tracking-[0.25em]">
-        VETO v0.1 | Decentralized Authority
+        VETO v0.2 | {aiStatus === 'ready' ? '🟢 AI Aktif' : aiStatus === 'loading' ? `⏳ AI ${loadProgress}%` : '⚡ Heuristic Mode'}
       </footer>
     </div>
   );
