@@ -1,0 +1,162 @@
+[
+  {
+    "id": "SCN-001",
+    "title": "Korupsi Dana BOS Sekolah",
+    "narrative": "Anda menerima laporan bahwa seorang Kepala Sekolah menggunakan dana BOS untuk renovasi rumah pribadinya. Namun, kepala sekolah tersebut sangat dicintai siswa karena prestasinya dalam memajukan kualitas ekstrakurikuler.",
+    "context_tags": ["Integrity", "Education", "Corruption"],
+    "options": [
+      {
+        "label": "Tahan & Proses Hukum (Legalistik)",
+        "impact": { "law": 20, "humanity": -5, "order": 10, "budget": -5 },
+        "legal_basis": "UU Tipikor No. 31 Tahun 1999.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Minta Kembalikan & Mutasi (Politis)",
+        "impact": { "law": 5, "humanity": 10, "order": 15, "budget": 5 },
+        "legal_basis": "Sanksi Administratif ASN.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Abaikan demi Stabilitas Sekolah (Praktis)",
+        "impact": { "law": -25, "humanity": 5, "order": 5, "budget": -10 },
+        "legal_basis": "Risiko Pembiaran Tindak Pidana.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Mediasi dengan Wali Murid (Humanis)",
+        "impact": { "law": -10, "humanity": 20, "order": -5, "budget": 0 },
+        "legal_basis": "Paradigma Restorative Justice (Terbatas).",
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-002",
+    "title": "Perundungan Siber (Cyber Bullying)",
+    "narrative": "Seorang siswa depresi berat karena foto pribadinya disebarkan di grup sekolah oleh teman-temannya. Pelakunya adalah anak dari donatur terbesar sekolah yang mengancam akan menarik bantuannya jika dihukum berat.",
+    "context_tags": ["Digital Rights", "Ethics", "Human Rights"],
+    "options": [
+      {
+        "label": "Terapkan UU ITE secara Tegas",
+        "impact": { "law": 25, "humanity": 10, "order": -10, "budget": -20 },
+        "legal_basis": "UU ITE No. 19 Tahun 2016.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Skorsing & Konseling Internal",
+        "impact": { "law": 10, "humanity": 15, "order": 10, "budget": 0 },
+        "legal_basis": "Permendikbud No. 82 Tahun 2015.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Rahasiakan Kasus demi Donatur",
+        "impact": { "law": -20, "humanity": -25, "order": 5, "budget": 20 },
+        "legal_basis": "Pelanggaran Hak Perlindungan Anak.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Program Rekonsiliasi Siswa",
+        "impact": { "law": 0, "humanity": 25, "order": 5, "budget": -5 },
+        "legal_basis": "Metode Pendidikan Karakter.",
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-003",
+    "title": "Pinjaman Online Ilegal",
+    "narrative": "Banyak guru honorer terjebak hutang Pinjol Ilegal yang melakukan teror kepada keluarga mereka. Anda diminta untuk memitigasi krisis ini tanpa mengganggu APBN.",
+    "context_tags": ["Economy", "Consumer Protection"],
+    "options": [
+      {
+        "label": "Blokir Semua Aplikasi Pinjol",
+        "impact": { "law": 15, "humanity": 5, "order": 20, "budget": -10 },
+        "legal_basis": "Otoritas Jasa Keuangan (OJK).",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Subsidi Khusus Pelunasan Hutang",
+        "impact": { "law": 0, "humanity": 25, "order": 5, "budget": -30 },
+        "legal_basis": "Fungsi Proteksi Sosial Negara.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Gunakan Jalur Hukum Perdata",
+        "impact": { "law": 20, "humanity": -5, "order": -5, "budget": 0 },
+        "legal_basis": "Kitab Undang-Undang Hukum Perdata.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Edukasi Literasi Keuangan Massal",
+        "impact": { "law": 5, "humanity": 10, "order": 10, "budget": -5 },
+        "legal_basis": "Program Ketahanan Ekonomi Keluarga.",
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-004",
+    "title": "Isu Kebebasan Berpendapat",
+    "narrative": "Seorang aktivis ditangkap karena mengkritik kebijakan Anda secara tajam di media sosial. Sebagian kabinet ingin dia dipenjara, namun publik internasional mengecam penangkapan tersebut.",
+    "context_tags": ["Politics", "Constitution", "Freedom of Speech"],
+    "options": [
+      {
+        "label": "Bebaskan demi Citra Global",
+        "impact": { "law": -5, "humanity": 20, "order": -10, "budget": 10 },
+        "legal_basis": "UUD 1945 Pasal 28E ayat 3.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Lanjutkan Proses Hukum",
+        "impact": { "law": 20, "humanity": -15, "order": 15, "budget": 0 },
+        "legal_basis": "Pencemaran Nama Baik (Pasal 27 ayat 3 UU ITE).",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Ajak Dialog Terbuka",
+        "impact": { "law": 5, "humanity": 25, "order": 5, "budget": -5 },
+        "legal_basis": "Prinsip Demokrasi Deliberatif.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Gunakan Cyber Police untuk Konter",
+        "impact": { "law": -10, "humanity": -10, "order": 20, "budget": -10 },
+        "legal_basis": "Manajemen Stabilitas Opini Publik.",
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-005",
+    "title": "Eksploitasi SDA vs Masyarakat Adat",
+    "narrative": "Investasi asing besar masuk untuk tambang nikel yang akan menduniai pasar baterai mobil listrik, namun lokasinya berada di hutan keramat milik masyarakat adat.",
+    "context_tags": ["Environment", "Investment", "Indigenous Rights"],
+    "options": [
+      {
+        "label": "Prioritaskan Investasi (Ekonomi)",
+        "impact": { "law": -10, "humanity": -20, "order": 10, "budget": 30 },
+        "legal_basis": "UU Cipta Kerja (Klaster Investasi).",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Akui Hak Wilayah Adat",
+        "impact": { "law": 20, "humanity": 25, "order": -10, "budget": -20 },
+        "legal_basis": "Putusan MK No. 35/PUU-X/2012.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Sistem Bagi Hasil dengan Rakyat",
+        "impact": { "law": 10, "humanity": 10, "order": 10, "budget": 10 },
+        "legal_basis": "Pasal 33 UUD 1945.",
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Pindahkan Penduduk ke Rusun",
+        "impact": { "law": -5, "humanity": -10, "order": 20, "budget": -5 },
+        "legal_basis": "Program Relokasi Strategis Nasional.",
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  }
+]
