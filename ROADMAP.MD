@@ -50,11 +50,12 @@ Dokumen ini merangkum langkah strategis pengembangan **VETO: President Simulator
 - [x] Fallback heuristic otomatis jika WebGPU tidak tersedia (No Crash Policy).
 - **Output**: 🤖 ~~*AI-Powered Intelligence Layer*~~ → `VETO V0.2` **AI AKTIF** ✅
 
-### Fase 6: "Instant Play" Protocol (UX Polish)
+### ~~Fase 6: "Instant Play" Protocol (UX Polish)~~ ✅
 *Menghapus hambatan waktu tunggu (Latency Zero).*
-- [ ] Pengembangan narasi *Prologue* sebagai pengalih background loading.
-- [ ] Sistem *Hot-Swap Logic* dari Heuristic ke WebLLM.
-- **Output**: ✨ *Seamless User Experience*.
+- [x] Pengembangan narasi *Prologue* sebagai pengalih background loading.
+- [x] Sistem *Hot-Swap Logic* dari Heuristic ke WebLLM (Seamless Transition).
+- [x] Implementasi "Decision Haptic" (Visual Flash & Mobile Vibration).
+- **Output**: ✨ ~~*Seamless User Experience*~~ → `VETO V0.3` **HIGH POLISH** ✅
 
 ### Fase 7: Deployment Desentralisasi (IPFS)
 *Menjamin aplikasi tidak bisa dimatikan (Censorship-Resistant).*

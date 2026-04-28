@@ -41,8 +41,11 @@ function App() {
    * Handler pilihan — menggabungkan Game Engine + AI + UX Effects.
    */
   const handleChoice = async (option: ScenarioOption) => {
-    // 1. Trigger Haptic (Flash)
+    // 1. Trigger Haptic (Flash & Vibration)
     setIsHapticFlash(true);
+    if (typeof window !== 'undefined' && window.navigator.vibrate) {
+      window.navigator.vibrate(50); // Feedback fisik singkat
+    }
     setTimeout(() => setIsHapticFlash(false), 200);
 
     // 2. Logic & AI
