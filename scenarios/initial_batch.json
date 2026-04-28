@@ -3,146 +3,36 @@
     "id": "SCN-001",
     "type": "normal",
     "title": "Korupsi Dana BOS Sekolah",
-    "narrative": "Anda menerima laporan bahwa seorang Kepala Sekolah menggunakan dana BOS untuk renovasi rumah pribadinya. Ia sangat dicintai siswa, namun pelanggaran sudah terdokumentasi.",
-    "context_tags": ["Integrity", "Education", "Corruption"],
+    "narrative": "Anda menerima laporan bahwa seorang Kepala Sekolah menggunakan dana BOS untuk renovasi rumah pribadinya. Pelanggaran sudah terdokumentasi, namun ia dicintai warga.",
+    "context_tags": ["Integrity", "Education"],
     "options": [
       {
-        "label": "Tahan & Proses Hukum (Legalistik)",
+        "label": "Tahan & Proses Hukum",
         "impact": { "law": 8, "humanity": -4, "order": 5, "budget": -3 },
-        "legal_basis": "UU Tipikor No. 31 Tahun 1999.",
+        "legal_basis": "UU Tipikor No. 31/1999.",
         "is_trap": false,
         "next_node": "DYNAMIC_NEXT"
       },
       {
-        "label": "Minta Kembalikan & Mutasi (Politis)",
+        "label": "Minta Kembalikan & Mutasi",
         "impact": { "law": 3, "humanity": 6, "order": 4, "budget": 3 },
         "legal_basis": "Sanksi Administratif ASN.",
         "is_trap": false,
         "next_node": "DYNAMIC_NEXT"
       },
       {
-        "label": "Abaikan demi Stabilitas Sekolah",
+        "label": "Abaikan demi Stabilitas",
         "impact": { "law": -8, "humanity": 3, "order": 2, "budget": -4 },
         "legal_basis": "Risiko Pembiaran Tindak Pidana.",
         "is_trap": false,
         "next_node": "DYNAMIC_NEXT"
       },
       {
-        "label": "Tutup Kasus & Terima Suap Donasi",
-        "impact": { "law": -100, "humanity": -100, "order": -100, "budget": -100 },
-        "legal_basis": "Tindak Pidana Korupsi Aktif — Pemakzulan Instan.",
+        "label": "Diskusi Tertutup & Minta 'Hormat'",
+        "impact": { "law": -20, "humanity": -10, "order": -5, "budget": 10 },
+        "legal_basis": "Penerimaan Gratifikasi — Bahaya laten Korupsi.",
         "is_trap": true,
-        "next_node": "DYNAMIC_NEXT"
-      }
-    ]
-  },
-  {
-    "id": "SCN-002",
-    "type": "normal",
-    "title": "Perundungan Siber (Cyber Bullying)",
-    "narrative": "Seorang siswa depresi berat karena foto pribadinya disebarkan di grup sekolah. Pelakunya adalah anak donatur terbesar yang mengancam menarik bantuannya jika dihukum.",
-    "context_tags": ["Digital Rights", "Ethics", "Human Rights"],
-    "options": [
-      {
-        "label": "Terapkan UU ITE secara Tegas",
-        "impact": { "law": 10, "humanity": 5, "order": -4, "budget": -8 },
-        "legal_basis": "UU ITE No. 19 Tahun 2016.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Skorsing & Konseling Internal",
-        "impact": { "law": 4, "humanity": 7, "order": 5, "budget": 0 },
-        "legal_basis": "Permendikbud No. 82 Tahun 2015.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Program Rekonsiliasi Siswa",
-        "impact": { "law": 0, "humanity": 9, "order": 3, "budget": -3 },
-        "legal_basis": "Metode Pendidikan Karakter.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Rahasiakan Kasus demi Donatur",
-        "impact": { "law": -100, "humanity": -100, "order": -100, "budget": -100 },
-        "legal_basis": "Pelanggaran berat Hak Perlindungan Anak — Pemakzulan Instan.",
-        "is_trap": true,
-        "next_node": "DYNAMIC_NEXT"
-      }
-    ]
-  },
-  {
-    "id": "SCN-003",
-    "type": "normal",
-    "title": "Pinjaman Online Ilegal",
-    "narrative": "Banyak guru honorer terjebak hutang Pinjol Ilegal yang melakukan teror kepada keluarga mereka. Anda diminta memitigasi krisis ini tanpa mengganggu APBN.",
-    "context_tags": ["Economy", "Consumer Protection"],
-    "options": [
-      {
-        "label": "Blokir Semua Aplikasi Pinjol",
-        "impact": { "law": 6, "humanity": 4, "order": 8, "budget": -5 },
-        "legal_basis": "Otoritas Jasa Keuangan (OJK).",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Gunakan Jalur Hukum Perdata",
-        "impact": { "law": 8, "humanity": -3, "order": -2, "budget": 0 },
-        "legal_basis": "Kitab Undang-Undang Hukum Perdata.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Edukasi Literasi Keuangan Massal",
-        "impact": { "law": 2, "humanity": 6, "order": 5, "budget": -3 },
-        "legal_basis": "Program Ketahanan Ekonomi Keluarga.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Biarkan OJK Menangani Sendiri",
-        "impact": { "law": -5, "humanity": -7, "order": -6, "budget": 2 },
-        "legal_basis": "Abdi Negara Abai — Preseden buruk kepemimpinan.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      }
-    ]
-  },
-  {
-    "id": "SCN-004",
-    "type": "normal",
-    "title": "Isu Kebebasan Berpendapat",
-    "narrative": "Seorang aktivis ditangkap karena mengkritik kebijakan Anda di media sosial. Publik internasional mengecam penangkapan tersebut. Kabinet terpecah.",
-    "context_tags": ["Politics", "Constitution", "Freedom of Speech"],
-    "options": [
-      {
-        "label": "Bebaskan demi Citra Global",
-        "impact": { "law": -2, "humanity": 9, "order": -5, "budget": 4 },
-        "legal_basis": "UUD 1945 Pasal 28E ayat 3.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Lanjutkan Proses Hukum",
-        "impact": { "law": 8, "humanity": -6, "order": 7, "budget": 0 },
-        "legal_basis": "Pencemaran Nama Baik (Pasal 27 ayat 3 UU ITE).",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Ajak Dialog Terbuka",
-        "impact": { "law": 2, "humanity": 10, "order": 3, "budget": -2 },
-        "legal_basis": "Prinsip Demokrasi Deliberatif.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Perintahkan Penghentian Semua Oposisi",
-        "impact": { "law": -100, "humanity": -100, "order": -100, "budget": -100 },
-        "legal_basis": "Pelanggaran HAM berat — Tindakan Diktator. Pemakzulan Instan.",
-        "is_trap": true,
+        "trigger_flag": "corrupt_deal",
         "next_node": "DYNAMIC_NEXT"
       }
     ]
@@ -151,14 +41,15 @@
     "id": "SCN-005",
     "type": "normal",
     "title": "Eksploitasi SDA vs Masyarakat Adat",
-    "narrative": "Investasi asing masuk untuk tambang nikel di hutan keramat milik masyarakat adat. Keputusan ini dipantau dunia internasional.",
-    "context_tags": ["Environment", "Investment", "Indigenous Rights"],
+    "narrative": "Investasi asing masuk untuk tambang nikel di hutan keramat masyarakat adat. Ini adalah proyek strategis nasional yang sangat menguntungkan kas negara.",
+    "context_tags": ["Environment", "Investment"],
     "options": [
       {
         "label": "Prioritaskan Investasi (Ekonomi)",
-        "impact": { "law": -5, "humanity": -8, "order": 5, "budget": 11 },
+        "impact": { "law": -5, "humanity": -8, "order": 5, "budget": 12 },
         "legal_basis": "UU Cipta Kerja (Klaster Investasi).",
         "is_trap": false,
+        "trigger_flag": "industrial_deal",
         "next_node": "DYNAMIC_NEXT"
       },
       {
@@ -176,121 +67,84 @@
         "next_node": "DYNAMIC_NEXT"
       },
       {
-        "label": "Pindahkan Penduduk ke Rusun",
-        "impact": { "law": -4, "humanity": -6, "order": 8, "budget": -3 },
-        "legal_basis": "Program Relokasi Strategis Nasional.",
+        "label": "Batalkan Investasi Total",
+        "impact": { "law": 2, "humanity": 10, "order": -8, "budget": -20 },
+        "legal_basis": "Perlindungan Lingkungan Maksimal.",
         "is_trap": false,
         "next_node": "DYNAMIC_NEXT"
       }
     ]
   },
   {
-    "id": "SCN-006",
+    "id": "SCN-CHAIN-01",
     "type": "crucial",
-    "title": "‼️ KRISIS: Kudeta Konstitusional",
-    "narrative": "Jenderal senior mengumumkan 'darurat nasional' tanpa persetujuan Anda. Sebagian DPR berpihak padanya. Waktu Anda untuk merespons sangat terbatas — keputusan ini akan menentukan nasib demokrasi.",
-    "context_tags": ["KRISIS", "Constitutional", "Military"],
+    "required_flag": "industrial_deal",
+    "title": "‼️ LANJUTAN: Tawaran 'Donasi' Pabrik",
+    "narrative": "Pabrik nikel yang Anda izinkan kini telah beroperasi. Pemilik perusahaan datang memberikan 'donasi kampanye' pribadi sebesar 10% dari profit sebagai tanda terima kasih atas kemudahan izin.",
+    "context_tags": ["KRISIS", "Corruption", "Ethics"],
     "options": [
       {
-        "label": "Dekrit Presiden — Tolak Kudeta Tegas",
-        "impact": { "law": 30, "humanity": 10, "order": -20, "budget": -15 },
-        "legal_basis": "Pasal 10 & 11 UUD 1945 — Wewenang Presiden atas Militer.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Negosiasi Rahasia dengan Jenderal",
-        "impact": { "law": -15, "humanity": -10, "order": 25, "budget": -10 },
-        "legal_basis": "Pragmatisme Politik — Risiko Preseden Buruk.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Minta Dukungan Internasional (PBB)",
-        "impact": { "law": 20, "humanity": 15, "order": -15, "budget": -20 },
-        "legal_basis": "Prinsip Non-Intervensi vs Tanggung Jawab Melindungi (R2P).",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Serahkan Kekuasaan Demi Perdamaian",
+        "label": "Terima sebagai Dana Sosial (CSR)",
         "impact": { "law": -100, "humanity": -100, "order": -100, "budget": -100 },
-        "legal_basis": "Pengunduran diri inkonstitusional — Kepemimpinan berakhir seketika.",
+        "legal_basis": "Suap/Gratifikasi dalam Jabatan — Skandal Terbongkar. Pemakzulan!",
         "is_trap": true,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Tolak & Perintahkan Audit",
+        "impact": { "law": 25, "humanity": 15, "order": 10, "budget": -10 },
+        "legal_basis": "Integritas Pejabat Publik.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Masukkkan ke Kas Negara Resmi",
+        "impact": { "law": 15, "humanity": 5, "order": 5, "budget": 30 },
+        "legal_basis": "Penerimaan Negara Bukan Pajak (PNBP).",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Gunakan untuk Bangun Sekolah Lokal",
+        "impact": { "law": 10, "humanity": 30, "order": 10, "budget": 10 },
+        "legal_basis": "Kewajiban Sosial Perusahaan.",
+        "is_trap": false,
         "next_node": "DYNAMIC_NEXT"
       }
     ]
   },
   {
-    "id": "SCN-007",
+    "id": "SCN-003",
     "type": "normal",
-    "title": "Anggaran Sekolah vs Infrastruktur",
-    "narrative": "Kas APBN terbatas. DPR mendesak Anda memilih antara menambah Dana BOS atau mempercepat proyek jalan Trans-Papua yang sudah terlambat.",
-    "context_tags": ["Budget", "Education", "Infrastructure"],
+    "title": "Pinjaman Online Ilegal",
+    "narrative": "Banyak guru honorer terjebak hutang Pinjol Ilegal. Teror penagihan mulai mengganggu aktivitas belajar mengajar di sekolah negara.",
+    "context_tags": ["Economy", "Consumer Protection"],
     "options": [
       {
-        "label": "Prioritaskan Dana BOS Sekolah",
-        "impact": { "law": 3, "humanity": 9, "order": 2, "budget": -7 },
-        "legal_basis": "Konstitusi — 20% APBN untuk Pendidikan.",
+        "label": "Blokir Semua Aplikasi Pinjol",
+        "impact": { "law": 6, "humanity": 4, "order": 8, "budget": -5 },
+        "legal_basis": "Otoritas Jasa Keuangan (OJK).",
         "is_trap": false,
         "next_node": "DYNAMIC_NEXT"
       },
       {
-        "label": "Percepat Infrastruktur Trans-Papua",
-        "impact": { "law": 2, "humanity": -5, "order": 7, "budget": -9 },
-        "legal_basis": "Perpres Percepatan Pembangunan.",
+        "label": "Gunakan Jalur Hukum Perdata",
+        "impact": { "law": 8, "humanity": -3, "order": -2, "budget": 0 },
+        "legal_basis": "Kitab Undang-Undang Hukum Perdata.",
         "is_trap": false,
         "next_node": "DYNAMIC_NEXT"
       },
       {
-        "label": "Realokasi dari Anggaran Militer",
-        "impact": { "law": 4, "humanity": 6, "order": -8, "budget": 5 },
-        "legal_basis": "Hak Prerogatif Presiden atas APBN.",
+        "label": "Edukasi Literasi Keuangan",
+        "impact": { "law": 2, "humanity": 6, "order": 5, "budget": -3 },
+        "legal_basis": "Program Ketahanan Ekonomi.",
         "is_trap": false,
         "next_node": "DYNAMIC_NEXT"
       },
       {
-        "label": "Tunda Semua Proyek Prioritas",
-        "impact": { "law": -3, "humanity": -4, "order": -5, "budget": 6 },
-        "legal_basis": "Kebijakan Fiskal Konservatif.",
+        "label": "Biarkan Mekanisme Pasar Berjalan",
+        "impact": { "law": -5, "humanity": -7, "order": -6, "budget": 2 },
         "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      }
-    ]
-  },
-  {
-    "id": "SCN-008",
-    "type": "crucial",
-    "title": "‼️ KRISIS: Bencana Alam Nasional",
-    "narrative": "Gempa magnitudo 7.8 menghantam tiga provinsi secara bersamaan. 200.000 jiwa mengungsi. Dana Bencana Nasional hanya cukup untuk satu provinsi. Media internasional menyoroti respons Anda.",
-    "context_tags": ["KRISIS", "Disaster", "Humanitarian"],
-    "options": [
-      {
-        "label": "Fokus ke Ibukota Provinsi (Efektif)",
-        "impact": { "law": 5, "humanity": -20, "order": 25, "budget": -30 },
-        "legal_basis": "Logika Triage Bencana — Evakuasi Maksimal.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Distribusi Merata Tiga Provinsi",
-        "impact": { "law": 10, "humanity": 30, "order": -15, "budget": -35 },
-        "legal_basis": "Asas Pemerataan — UU Penanggulangan Bencana No. 24/2007.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Minta Bantuan Donor Internasional",
-        "impact": { "law": 5, "humanity": 20, "order": -10, "budget": -10 },
-        "legal_basis": "Kerjasama Internasional Kemanusiaan.",
-        "is_trap": false,
-        "next_node": "DYNAMIC_NEXT"
-      },
-      {
-        "label": "Tunda Respons — Tunggu Data Lengkap",
-        "impact": { "law": -100, "humanity": -100, "order": -100, "budget": -100 },
-        "legal_basis": "Kelalaian saat darurat nasional — Kejahatan Kemanusiaan. Pemakzulan Instan.",
-        "is_trap": true,
         "next_node": "DYNAMIC_NEXT"
       }
     ]

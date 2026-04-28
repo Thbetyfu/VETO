@@ -23,28 +23,22 @@ export interface ScenarioOption {
   label: string;
   impact: Impact;
   legal_basis: string;
-  /**
-   * is_trap: true → pilihan jebakan yang menyebabkan GAME OVER instan.
-   * Gunakan sparingly — maksimal 1 trap per skenario, umumnya pada opsi ke-4.
-   * Nilai impact harus -100 di semua pilar agar game engine memicu GameOver.
-   */
   is_trap: boolean;
   next_node: string;
+  /** Flag yang akan diaktifkan di global state jika opsi ini dipilih. */
+  trigger_flag?: string;
 }
 
 /** Satu kartu skenario lengkap. */
 export interface Scenario {
   id: string;
-  /**
-   * Tipe skenario:
-   * - 'normal'  → impact kecil. Muncul 3x lebih sering dari crucial.
-   * - 'crucial' → tanda ‼️, impact besar. Gunakan untuk titik balik dramatis.
-   */
   type: ScenarioType;
   title: string;
   narrative: string;
   context_tags: string[];
   options: ScenarioOption[];
+  /** Flag yang dibutuhkan agar skenario ini bisa muncul dalam pool. */
+  required_flag?: string;
 }
 
 /** State global permainan yang dikelola oleh useGameEngine. */
