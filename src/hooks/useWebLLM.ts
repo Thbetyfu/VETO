@@ -28,6 +28,14 @@ export const useWebLLM = () => {
    */
   const initModel = useCallback(async () => {
     if (status !== 'idle') return;
+
+    // PRE-FLIGHT CHECK: Jangan muat library berat jika GPU tidak ada (Optimasi Kecepatan)
+    if (!navigator.gpu) {
+      console.warn('[VETO AI] WebGPU tidak tersedia di browser ini. Fallback Heuristic aktif.');
+      setStatus('error');
+      return;
+    }
+
     setStatus('loading');
 
     try {
@@ -43,7 +51,7 @@ export const useWebLLM = () => {
       setStatus('ready');
       setLoadProgress(100);
     } catch (err) {
-      console.warn('[VETO AI] WebGPU tidak tersedia atau model gagal dimuat. Fallback aktif.', err);
+      console.warn('[VETO AI] Gagal menginisialisasi engine AI.', err);
       setStatus('error');
     }
   }, [status]);

@@ -116,12 +116,12 @@ export const useGameEngine = () => {
       const { over, reason } = checkGameOver(newStats);
 
       // 3. FLAG & HISTORY UPDATE
-      const newFlags = [...prev.activeFlags];
+      const newFlags = [...(prev.activeFlags || [])];
       if (option.trigger_flag && !newFlags.includes(option.trigger_flag)) {
         newFlags.push(option.trigger_flag);
       }
 
-      const newHistory = prev.history.concat({
+      const newHistory = (prev.history || []).concat({
         scenarioId: prev.currentScenario?.id ?? '',
         choiceLabel: option.label,
       });

@@ -32,9 +32,12 @@ function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [isHapticFlash, setIsHapticFlash] = useState(false);
 
-  // Mulai muat model AI di background saat app pertama dibuka (Opportunistic Loading)
+  // Mulai muat model AI dengan delay agar tidak mengganggu rendering awal (Latency Zero)
   useEffect(() => {
-    initModel();
+    const timer = setTimeout(() => {
+      initModel();
+    }, 1500); // Tunggu animasi awal selesai
+    return () => clearTimeout(timer);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
