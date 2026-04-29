@@ -26,7 +26,7 @@ export interface ScenarioOption {
   is_trap: boolean;
   next_node: string;
   /** Flag yang akan diaktifkan di global state jika opsi ini dipilih. */
-  trigger_flag?: string;
+  trigger_flags?: string[];
 }
 
 /** Satu kartu skenario lengkap. */
@@ -38,7 +38,9 @@ export interface Scenario {
   context_tags: string[];
   options: ScenarioOption[];
   /** Flag yang dibutuhkan agar skenario ini bisa muncul dalam pool. */
-  required_flag?: string;
+  required_flags?: string[];
+  /** Flag yang jika aktif akan melarang skenario ini muncul. */
+  forbidden_flags?: string[];
 }
 
 /** State global permainan yang dikelola oleh useGameEngine. */
@@ -48,8 +50,12 @@ export interface GameState {
   currentScenario: Scenario | null;
   lastChoice: ScenarioOption | null;
   isGameOver: boolean;
+  isReportOpen: boolean; // Baru: Menandai jeda laporan 10/30 hari
   gameOverReason: string;
-  history: Array<{ scenarioId: string; choiceLabel: string }>;
+  history: Array<{ scenarioId: string; choiceLabel: string; impact: Impact }>;
+  normalStreak: number;
+  activeFlags: string[];
+  profile: string;
 }
 
 /** Status lifecycle model WebLLM. */

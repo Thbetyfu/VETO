@@ -1,103 +1,97 @@
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Gavel, AlertTriangle, ShieldCheck } from 'lucide-react';
 import type { Scenario, ScenarioOption } from '../types/scenario';
 
 interface ScenarioCardProps {
   scenario: Scenario;
   day: number;
   onChoice: (option: ScenarioOption) => void;
+  disabled?: boolean;
 }
 
 /**
  * @component ScenarioCard
- * @description Kartu utama yang menampilkan narasi dan opsi kebijakan.
- * 
- * FIX FASE 6 (v2): Visual trap dihilangkan agar pemain harus benar-benar 
- * membaca dan menganalisis risiko hukum sendiri tanpa "petunjuk" visual.
+ * @description Fase 3: Decision Interface (UI/UX).
+ * SRP: Hanya menangani presentasi skenario.
+ * Menggunakan prinsip 'Focus Neuron' - Menyederhanakan visual agar pemain fokus pada konten hukum.
  */
-export const ScenarioCard = ({ scenario, day, onChoice }: ScenarioCardProps) => {
+export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, day, onChoice, disabled }) => {
   const isCrucial = scenario.type === 'crucial';
 
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key={scenario.id + day}
-        initial={{ opacity: 0, y: 30, scale: 0.96 }}
-        animate={{
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          transition: { type: 'spring', stiffness: 300, damping: 28 },
-        }}
-        exit={{ opacity: 0, x: -80, rotate: -4, transition: { duration: 0.25 } }}
-        className={`glass-card p-8 relative overflow-hidden ${
-          isCrucial ? 'ring-1 ring-red-500/30' : ''
+        key={`${scenario.id}-${day}`}
+        initial={{ opacity: 0, scale: 0.98, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
+        transition={{ type: 'spring', stiffness: 260, damping: 25 }}
+        className={`glass-card p-8 md:p-10 relative overflow-hidden ${
+          isCrucial ? 'border-red-500/20 shadow-[0_0_50px_rgba(239,68,68,0.1)]' : ''
         }`}
       >
-        {/* Crucial Glow (Subtle) */}
-        {isCrucial && (
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
-          </div>
-        )}
-
-        {/* Day Badge */}
-        <div
-          className={`absolute top-0 right-0 px-4 py-1 text-xs font-bold uppercase tracking-widest rounded-bl-xl ${
-            isCrucial ? 'bg-red-900/80 text-white animate-pulse' : 'bg-president-gold text-black'
-          }`}
-        >
-          {isCrucial ? '‼️ KRISIS' : `Hari ke-${day}`}
+        {/* Status Indicator */}
+        <div className="absolute top-0 right-0 px-6 py-2 flex items-center gap-2 rounded-bl-2xl bg-white/5 border-l border-b border-white/10">
+          {isCrucial ? (
+            <div className="flex items-center gap-1.5 text-red-500 text-[10px] font-black tracking-widest animate-pulse">
+              <AlertTriangle size={12} />
+              STATUS: KRISIS NASIONAL
+            </div>
+          ) : (
+            <div className="text-president-gold text-[10px] font-black tracking-widest flex items-center gap-1.5">
+              <ShieldCheck size={12} />
+              HARI KE-{day}
+            </div>
+          )}
         </div>
 
-        {/* Context Tags */}
-        <div className="flex flex-wrap gap-2 mb-5 mt-1">
-          {scenario.context_tags.map(tag => (
-            <span
+        {/* Header Tags */}
+        <div className="flex gap-2 mb-8">
+          {scenario.context_tags.map((tag) => (
+            <span 
               key={tag}
-              className={`text-[10px] font-semibold uppercase tracking-widest px-2 py-1 rounded-full border border-white/10 text-slate-400`}
+              className="text-[9px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-md bg-white/5 border border-white/5 text-slate-500"
             >
-              {tag}
+              #{tag}
             </span>
           ))}
         </div>
 
-        {/* Title */}
-        <h2
-          className={`text-xl font-bold mb-3 leading-snug ${
-            isCrucial ? 'text-red-400' : 'text-president-gold'
-          }`}
-        >
-          {scenario.title}
-        </h2>
+        {/* Narrative Section */}
+        <div className="space-y-4 mb-10">
+          <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight">
+            {scenario.title}
+          </h2>
+          <div className="h-px w-20 bg-president-gold/40" />
+          <p className="text-slate-300 text-base md:text-lg leading-relaxed font-light italic">
+            "{scenario.narrative}"
+          </p>
+        </div>
 
-        {/* Narrative */}
-        <p
-          className={`text-slate-300 text-sm leading-relaxed mb-8 border-l-2 pl-4 border-president-gold/40`}
-        >
-          {scenario.narrative}
-        </p>
-
-        {/* Options (Uniform Design) */}
-        <div className="space-y-3">
-          {scenario.options.map((opt, i) => (
+        {/* Options Grid (Neural Selectors) */}
+        <div className="grid gap-4">
+          {scenario.options.map((option, idx) => (
             <motion.button
-              key={i}
-              whileHover={{ scale: 1.01, x: 4 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => onChoice(opt)}
-              className="w-full text-left p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-president-gold/50 transition-colors group"
+              key={idx}
+              whileHover={!disabled ? { x: 6, backgroundColor: 'rgba(255,255,255,0.05)' } : {}}
+              whileTap={!disabled ? { scale: 0.99 } : {}}
+              onClick={() => !disabled && onChoice(option)}
+              disabled={disabled}
+              className={`group flex items-start gap-5 p-5 rounded-xl border border-white/5 bg-white/[0.02] transition-all ${
+                disabled ? 'opacity-50 cursor-not-allowed' : 'hover:border-president-gold/40'
+              }`}
             >
-              <div className="flex items-start gap-3">
-                <span className="font-bold text-xs mt-0.5 shrink-0 text-president-gold/60">
-                  {String.fromCharCode(64 + i + 1)}.
-                </span>
-                <div>
-                  <p className="text-sm font-medium group-hover:text-president-gold transition-colors">
-                    {opt.label}
-                  </p>
-                  <p className="text-[11px] mt-1 text-slate-500">
-                    {opt.legal_basis}
-                  </p>
+              <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-president-gold/20 group-hover:text-president-gold transition-colors">
+                <span className="text-xs font-black">{String.fromCharCode(65 + idx)}</span>
+              </div>
+              <div className="text-left space-y-1">
+                <p className="text-sm md:text-base font-semibold text-slate-200 group-hover:text-white transition-colors">
+                  {option.label}
+                </p>
+                <div className="flex items-center gap-2 text-[10px] text-slate-500 font-mono tracking-wide uppercase">
+                  <Gavel size={10} />
+                  Dasar Hukum: {option.legal_basis}
                 </div>
               </div>
             </motion.button>

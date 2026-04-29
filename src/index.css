@@ -1,37 +1,76 @@
 @import "tailwindcss";
 
 @theme {
+  /* Design Tokens as Weights */
   --color-president-dark: #020617;
   --color-president-surface: #0F172A;
   --color-president-gold: #EAB308;
+  --color-president-gold-glow: rgba(234, 179, 8, 0.15);
   --color-president-accent: #38BDF8;
+  
+  /* Bias / Elevation Tokens */
+  --shadow-neural: 0 0 40px -10px var(--color-president-gold-glow);
 }
 
 :root {
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Fluid Typography (Neuron-like Scaling) */
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  /* Premium Deep Background */
   background: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 100%);
   color: #f1f5f9;
+  overflow-x: hidden;
 }
 
+/* SOLID - Modular UI Components */
 .glass-card {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  will-change: transform, opacity;
+  border-radius: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(234, 179, 8, 0.3);
+  box-shadow: var(--shadow-neural);
+}
+
+/* Neural Input Style */
+.neural-input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  color: white;
+  transition: border-color 0.3s ease;
+}
+
+.neural-input:focus {
+  outline: none;
+  border-color: var(--color-president-gold);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Staggered Animation for Layers */
+.stagger-load > * {
+  animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }

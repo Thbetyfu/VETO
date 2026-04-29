@@ -1,0 +1,77 @@
+[
+  {
+    "id": "SCN-15-01",
+    "type": "crucial",
+    "title": "🏛️ Pidato Pelantikan: Visi 10 Tahun",
+    "narrative": "Hari pertama Anda menjabat. Di hadapan rakyat, Anda harus menetapkan arah besar bangsa. Apakah Anda akan fokus pada pertumbuhan ekonomi secepat kilat melalui industrialisasi, atau perlindungan ekosistem yang berkelanjutan?",
+    "context_tags": ["Inauguration", "Strategy"],
+    "options": [
+      {
+        "label": "Akselerasi Industri & Hilirisasi",
+        "impact": { "law": 2, "humanity": -5, "order": 10, "budget": 20 },
+        "legal_basis": "Visi Indonesia Maju 2045.",
+        "is_trap": false,
+        "trigger_flags": ["PRO_INDUSTRY", "ECONOMY_BOOM"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Ekonomi Hijau & Keadilan Ekologis",
+        "impact": { "law": 10, "humanity": 15, "order": 5, "budget": -15 },
+        "legal_basis": "Komitmen Paris Agreement.",
+        "is_trap": false,
+        "trigger_flags": ["PRO_ENVIRONMENT", "ECO_NATION"],
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-15-02",
+    "type": "normal",
+    "required_flags": ["PRO_INDUSTRY"],
+    "title": "🏗️ Deregulasi Izin Lingkungan",
+    "narrative": "Demi mempercepat pembangunan pabrik baterai, menteri ekonomi menyarankan penghapusan beberapa poin AMDAL yang dianggap 'menghambat'.",
+    "context_tags": ["Industry", "Deregulation"],
+    "options": [
+      {
+        "label": "Setujui (Percepat Proyek)",
+        "impact": { "law": -10, "humanity": -15, "order": 10, "budget": 30 },
+        "legal_basis": "Perpu Percepatan Ekonomi.",
+        "is_trap": false,
+        "trigger_flags": ["ENVIRONMENTAL_DEBT"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Tolak (Tetap pada Prosedur)",
+        "impact": { "law": 15, "humanity": 5, "order": 5, "budget": -5 },
+        "legal_basis": "UU Lingkungan Hidup No. 32/2009.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-15-03",
+    "type": "normal",
+    "required_flags": ["PRO_ENVIRONMENT"],
+    "title": "🌿 Moratorium Izin Tambang",
+    "narrative": "Aktivis lingkungan menuntut penghentian total izin tambang baru di wilayah hutan lindung. Ini akan menjaga paru-paru dunia, namun investor mulai ragu.",
+    "context_tags": ["Green Policy", "Activism"],
+    "options": [
+      {
+        "label": "Teken Moratorium (Hutan Aman)",
+        "impact": { "law": 15, "humanity": 20, "order": -10, "budget": -25 },
+        "legal_basis": "Instruksi Presiden tentang Moratorium Hutan.",
+        "is_trap": false,
+        "trigger_flags": ["CONSERVATION_HERO"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Kompromi (Zona Terbatas)",
+        "impact": { "law": 5, "humanity": 5, "order": 5, "budget": 5 },
+        "legal_basis": "Pengelolaan Wilayah Berkelanjutan.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  }
+]

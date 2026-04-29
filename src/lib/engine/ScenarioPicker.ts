@@ -1,0 +1,39 @@
+import INITIAL_BATCH from '../../../scenarios/initial_batch.json';
+import FASE_15_1 from '../../../scenarios/fase_15_1.json';
+import { Scenario } from '../../types/scenario';
+import { IScenarioPicker } from './types';
+
+// Gabungkan semua batch skenario
+const SCENARIOS = [...INITIAL_BATCH, ...FASE_15_1] as Scenario[];
+
+export class ScenarioPicker implements IScenarioPicker {
+  pick(historyIds: string[], streak: number, activeFlags: string[], day: number): { scenario: Scenario | null; isPoolEmpty: boolean } {
+    // 0. Hardcoded Start (Fase 15.1: The Inauguration)
+    if (day === 1) {
+      const startScenario = SCENARIOS.find(s => s.id === 'SCN-15-01');
+      return { scenario: startScenario || null, isPoolEmpty: !startScenario };
+    }
+
+    const isCrisisTime = streak >= 5;
+    
+    const pool = SCENARIOS.filter(s => {
+      // 1. Bukan yang sudah pernah muncul
+      if (historyIds.includes(s.id)) return false;
+      
+      // 2. Filter Tipe (Normal vs Crucial)
+      if (isCrisisTime && s.type !== 'crucial') return false;
+      if (!isCrisisTime && s.type !== 'normal') return false;
+      
+      // 3. Filter Flag (Neural Weave Logic)
+      if (s.required_flags && !s.required_flags.every(f => activeFlags.includes(f))) return false;
+      if (s.forbidden_flags && s.forbidden_flags.some(f => activeFlags.includes(f))) return false;
+      
+      return true;
+    });
+
+    if (pool.length === 0) return { scenario: null, isPoolEmpty: true };
+    
+    const randomIndex = Math.floor(Math.random() * pool.length);
+    return { scenario: pool[randomIndex], isPoolEmpty: false };
+  }
+}

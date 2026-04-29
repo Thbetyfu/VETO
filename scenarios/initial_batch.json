@@ -38,7 +38,7 @@
     ]
   },
   {
-    "id": "SCN-005",
+    "id": "SCN-002",
     "type": "normal",
     "title": "Eksploitasi SDA vs Masyarakat Adat",
     "narrative": "Investasi asing masuk untuk tambang nikel di hutan keramat masyarakat adat. Ini adalah proyek strategis nasional yang sangat menguntungkan kas negara.",
@@ -144,6 +144,264 @@
       {
         "label": "Biarkan Mekanisme Pasar Berjalan",
         "impact": { "law": -5, "humanity": -7, "order": -6, "budget": 2 },
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-C01",
+    "type": "crucial",
+    "title": "Pandemi Virus Baru",
+    "narrative": "Virus pernapasan baru mulai menyebar di ibu kota. Para ahli medis menyarankan lockdown total, namun pengusaha memperingatkan ekonomi akan lumpuh.",
+    "context_tags": ["Health", "Economy"],
+    "options": [
+      {
+        "label": "Lockdown Total",
+        "impact": { "law": 10, "humanity": 20, "order": 30, "budget": -40 },
+        "legal_basis": "UU Kekarantinaan Kesehatan.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Imunitas Kelompok (Herd Immunity)",
+        "impact": { "law": -5, "humanity": -40, "order": -20, "budget": 15 },
+        "legal_basis": "Kebijakan Normal Baru.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-C02",
+    "type": "crucial",
+    "title": "Pemberontakan Bersenjata",
+    "narrative": "Kelompok separatis menyandera pekerja proyek strategis di Papua. Mereka menuntut kemerdekaan atau sandera akan dieksekusi.",
+    "context_tags": ["Security", "Sovereignty"],
+    "options": [
+      {
+        "label": "Operasi Militer Khusus",
+        "impact": { "law": 15, "humanity": -25, "order": 35, "budget": -20 },
+        "legal_basis": "Tugas Pokok TNI (Kedaulatan).",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Negosiasi & Otonomi Khusus",
+        "impact": { "law": 10, "humanity": 15, "order": -20, "budget": -5 },
+        "legal_basis": "Jalur Diplomasi Internal.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-C03",
+    "type": "crucial",
+    "title": "Gempa Bumi & Tsunami Dahsyat",
+    "narrative": "Gempa 8.9 SR menghantam pesisir barat. Ribuan orang hilang. Anda harus memutuskan untuk mengalihkan seluruh anggaran infrastruktur tahun ini untuk rekonstruksi.",
+    "context_tags": ["Disaster", "Fiscal"],
+    "options": [
+      {
+        "label": "Alihkan Semua Anggaran",
+        "impact": { "law": 5, "humanity": 40, "order": 10, "budget": -60 },
+        "legal_basis": "Dana Siap Pakai (On-Call) BNPB.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Minta Bantuan Internasional",
+        "impact": { "law": -10, "humanity": 20, "order": 5, "budget": -10 },
+        "legal_basis": "Pembukaan Pintu Bantuan Asing.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-C04",
+    "type": "crucial",
+    "title": "Investasi Pabrik vs Tanah Adat",
+    "narrative": "Investor asing menawarkan modal triliunan untuk membangun pabrik baterai EV. Namun, lokasi yang diinginkan berada di atas tanah adat yang belum bersertifikat. Warga menolak keras.",
+    "context_tags": ["Economy", "Human Rights"],
+    "options": [
+      {
+        "label": "Gunakan Hak Pakai Negara",
+        "impact": { "law": -10, "humanity": -20, "order": 15, "budget": 30 },
+        "legal_basis": "UU Cipta Kerja (Pengadaan Tanah).",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "trigger_flag": "FLAG_ADAT_CONFLICT"
+      },
+      {
+        "label": "Batalkan & Cari Lokasi Lain",
+        "impact": { "law": 15, "humanity": 20, "order": -10, "budget": -35 },
+        "legal_basis": "UUD 1945 Pasal 18B (Masyarakat Adat).",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-C05",
+    "type": "crucial",
+    "title": "Kenaikan BBM Mendadak",
+    "narrative": "Harga minyak dunia melonjak. Cadangan kas negara tersisa untuk 3 bulan jika subsidi tidak dipotong. Namun, menaikkan harga akan memicu demo besar di seluruh negeri.",
+    "context_tags": ["Fiscal", "Stability"],
+    "options": [
+      {
+        "label": "Naikkan Harga Sekarang",
+        "impact": { "law": 5, "humanity": -25, "order": -30, "budget": 45 },
+        "legal_basis": "Penyesuaian APBN Darurat.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Pertahankan Subsidi (Utang)",
+        "impact": { "law": -5, "humanity": 15, "order": 10, "budget": -50 },
+        "legal_basis": "Kebijakan Perlindungan Sosial.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "trigger_flag": "FLAG_NATIONAL_DEBT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-C06",
+    "type": "crucial",
+    "title": "Serangan Siber Lumpuhkan Perbankan",
+    "narrative": "Hacker internasional melumpuhkan sistem kliring bank sentral. Transaksi macet total. Mereka meminta tebusan dalam Bitcoin atau mengancam akan menghapus seluruh data saldo nasabah.",
+    "context_tags": ["Cybersecurity", "Economic Crisis"],
+    "options": [
+      {
+        "label": "Bayar Tebusan Secara Rahasia",
+        "impact": { "law": -25, "humanity": 5, "order": 30, "budget": -40 },
+        "legal_basis": "Dana Operasional Darurat Intelijen.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "trigger_flag": "FLAG_HIDDEN_DEAL"
+      },
+      {
+        "label": "Tolak & Hard Reset Sistem",
+        "impact": { "law": 15, "humanity": -35, "order": -40, "budget": 10 },
+        "legal_basis": "Kedaulatan Digital Nasional.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-C07",
+    "type": "crucial",
+    "title": "Bencana Kelaparan & Food Estate",
+    "narrative": "Kekeringan panjang menyebabkan gagal panen nasional. Solusi tercepat adalah membabat hutan lindung untuk proyek 'Food Estate' instan atau membiarkan harga beras naik 300%.",
+    "context_tags": ["Environment", "Humanity"],
+    "options": [
+      {
+        "label": "Babat Hutan demi Pangan",
+        "impact": { "law": -15, "humanity": 35, "order": 10, "budget": -20 },
+        "legal_basis": "Status Darurat Pangan Nasional.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "trigger_flag": "FLAG_DEFORESTATION"
+      },
+      {
+        "label": "Impor Masif (Habiskan Kas)",
+        "impact": { "law": 10, "humanity": 15, "order": -10, "budget": -50 },
+        "legal_basis": "Kebijakan Impor Darurat.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-C08",
+    "type": "crucial",
+    "title": "Intervensi Militer Negara Tetangga",
+    "narrative": "Kapal perang negara tetangga memasuki wilayah sengketa nikel kita. Militer meminta izin untuk melepaskan tembakan peringatan, namun ini bisa memicu perang terbuka.",
+    "context_tags": ["Geopolitics", "Defense"],
+    "options": [
+      {
+        "label": "Serang & Pertahankan Harga Diri",
+        "impact": { "law": 10, "humanity": -30, "order": 40, "budget": -35 },
+        "legal_basis": "Doktrin Pertahanan Semesta.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "trigger_flag": "FLAG_WAR_THRESHOLD"
+      },
+      {
+        "label": "Diplomasi & Mengalah Sementara",
+        "impact": { "law": -5, "humanity": 10, "order": -30, "budget": 15 },
+        "legal_basis": "Diplomasi Bebas Aktif.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-004",
+    "type": "normal",
+    "title": "Surplus Pajak Tahunan",
+    "narrative": "Berkat digitalisasi sistem pajak, negara mencatat surplus pendapatan yang tidak terduga. Rakyat berharap ada bantuan langsung, namun menteri keuangan menyarankan tabungan negara.",
+    "context_tags": ["Economy", "Fiscal"],
+    "options": [
+      {
+        "label": "Bagi sebagai Bansos",
+        "impact": { "law": 2, "humanity": 15, "order": 8, "budget": -10 },
+        "legal_basis": "Program Perlindungan Sosial.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Simpan di Dana Abadi",
+        "impact": { "law": 5, "humanity": -5, "order": 4, "budget": 20 },
+        "legal_basis": "Sovereign Wealth Fund.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-005",
+    "type": "normal",
+    "title": "Prestasi Atlet Nasional",
+    "narrative": "Kontingen Indonesia memenangkan juara umum di ajang internasional. Semangat nasionalisme melonjak tinggi. Ini adalah momen tepat untuk memperkuat narasi persatuan.",
+    "context_tags": ["Social", "Unity"],
+    "options": [
+      {
+        "label": "Berikan Bonus Besar",
+        "impact": { "law": 0, "humanity": 10, "order": 15, "budget": -8 },
+        "legal_basis": "Apresiasi Prestasi Bangsa.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Pidato Persatuan Saja",
+        "impact": { "law": 0, "humanity": 4, "order": 10, "budget": 0 },
+        "legal_basis": "Narasi Kebangsaan.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-006",
+    "type": "normal",
+    "title": "Penemuan Cadangan Lithium",
+    "narrative": "Geolog menemukan cadangan lithium raksasa di salah satu provinsi. Ini bisa membuat Indonesia menjadi pemain kunci baterai dunia, namun pembukaan tambang akan menggusur beberapa desa.",
+    "context_tags": ["Mining", "Economy"],
+    "options": [
+      {
+        "label": "Buka Tambang (Relokasi)",
+        "impact": { "law": 5, "humanity": -12, "order": 5, "budget": 25 },
+        "legal_basis": "UU Minerba.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Tunda demi AMDAL",
+        "impact": { "law": 10, "humanity": 8, "order": 2, "budget": -10 },
+        "legal_basis": "Analisis Mengenai Dampak Lingkungan.",
         "is_trap": false,
         "next_node": "DYNAMIC_NEXT"
       }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Scale, Users, ShieldAlert, Wallet } from 'lucide-react';
+import { Scale, Users, ShieldAlert, Wallet, Trophy } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useGameEngine } from './hooks/useGameEngine';
 import { useWebLLM } from './hooks/useWebLLM';
@@ -8,6 +8,10 @@ import { StatItem } from './components/StatItem';
 import { GameOverScreen } from './components/GameOverScreen';
 import { AIFeedback } from './components/AIFeedback';
 import { Prologue } from './components/Prologue';
+import { MonthlyReport } from './components/MonthlyReport';
+import { CalendarService } from './lib/engine/CalendarService';
+import { ElectionNight } from './components/ElectionNight';
+import { saveLegacy } from './lib/gun-bridge';
 import type { ScenarioOption } from './types/scenario';
 
 /**
@@ -16,21 +20,24 @@ import type { ScenarioOption } from './types/scenario';
  * dan menghubungkan event ke setiap layer.
  */
 function App() {
-  const { state, makeChoice, restartGame } = useGameEngine();
   const { 
     status: aiStatus, 
     loadProgress, 
     feedback, 
     initModel, 
     generateFeedback, 
-    clearFeedback 
+    clearFeedback,
+    aiService
   } = useWebLLM();
   
-  const { stats, day, currentScenario, isGameOver, gameOverReason, history } = state;
-  
-  // === UX STATE (Fase 6) ===
   const [gameStarted, setGameStarted] = useState(false);
+  const [playerName, setPlayerName] = useState('Presiden Anonim');
+  const [showGallery, setShowGallery] = useState(false);
   const [isHapticFlash, setIsHapticFlash] = useState(false);
+  const [isElectionNight, setIsElectionNight] = useState(false);
+
+  const { state, isLoading, makeChoice, restartGame, closeReport } = useGameEngine(aiService);
+  const { stats, day, currentScenario, isGameOver, isReportOpen, gameOverReason, history } = state;
 
   // Mulai muat model AI dengan delay agar tidak mengganggu rendering awal (Latency Zero)
   useEffect(() => {
@@ -39,6 +46,21 @@ function App() {
     }, 1500); // Tunggu animasi awal selesai
     return () => clearTimeout(timer);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // === Hall of Fame Integration ===
+  useEffect(() => {
+    if (isGameOver) {
+      saveLegacy({
+        id: `legacy-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        playerName: playerName,
+        day: day,
+        reason: gameOverReason,
+        finalStats: stats,
+        timestamp: Date.now(),
+        profile: state.profile
+      });
+    }
+  }, [isGameOver, playerName, day, gameOverReason, stats, state.profile]);
 
   /**
    * Handler pilihan — menggabungkan Game Engine + AI + UX Effects.
@@ -53,27 +75,73 @@ function App() {
 
     // 2. Logic & AI
     clearFeedback();
-    makeChoice(option);
+    await makeChoice(option);
     
     // Jalankan AI analysis setelah state update (tidak blocking UX)
-    await generateFeedback(option, stats, day, history.length);
+    if (aiStatus === 'ready') {
+      await generateFeedback(option.label);
+    }
   };
+
+  // === Milestone Triggers (Fase 14) ===
+  useEffect(() => {
+    if (day === 360) {
+      setIsElectionNight(true);
+    }
+  }, [day]);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-president-dark overflow-x-hidden">
       
       {/* 1. LAYER: PROLOGUE (Fase 6) */}
       <AnimatePresence>
-        {!gameStarted && (
+        {!gameStarted && !showGallery && (
           <Prologue 
-            onStart={() => setGameStarted(true)} 
+            onStart={(name) => {
+              setPlayerName(name);
+              setGameStarted(true);
+            }} 
             aiStatus={aiStatus}
             loadProgress={loadProgress}
           />
         )}
       </AnimatePresence>
 
-      {/* 2. LAYER: HAPTIC FLASH (Fase 6) */}
+      {/* 1b. LAYER: HALL OF FAME (Fase 9) */}
+      <AnimatePresence>
+        {showGallery && (
+          <LegacyGallery onBack={() => setShowGallery(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* 2. LAYER: MONTHLY REPORT (Fase 8 - Reflection) */}
+      <AnimatePresence>
+        {isReportOpen && (
+          <MonthlyReport 
+            day={day}
+            stats={stats}
+            history={history}
+            onContinue={closeReport}
+            aiStatus={aiStatus}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 2b. LAYER: ELECTION NIGHT (Fase 14 - Milestone) */}
+      <AnimatePresence>
+        {isElectionNight && (
+          <ElectionNight 
+            stats={stats}
+            isWinner={!isGameOver} 
+            onContinue={() => {
+              setIsElectionNight(false);
+              if (isGameOver) restartGame();
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 3. LAYER: HAPTIC FLASH (Fase 6) */}
       <AnimatePresence>
         {isHapticFlash && (
           <motion.div 
@@ -91,13 +159,30 @@ function App() {
         <div className="absolute bottom-[-15%] right-[-10%] w-[50%] h-[50%] bg-president-accent/8 blur-[160px] rounded-full" />
       </div>
 
-      {/* 4. LAYER: DASHBOARD SUMMARY */}
-      <header className="fixed top-0 left-0 right-0 z-10 flex justify-center pt-4 pb-3 px-4 bg-president-dark/60 backdrop-blur-md border-b border-white/5">
+      {/* 4. LAYER: DASHBOARD HEADER */}
+      <header className="fixed top-0 w-full z-40 flex items-center justify-between px-6 py-4 bg-president-dark/60 backdrop-blur-md border-b border-white/5">
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setShowGallery(true)}
+            className="p-2 rounded-full hover:bg-white/5 transition-colors text-president-gold"
+            title="Hall of Fame"
+          >
+            <Trophy size={20} />
+          </button>
+          <div className="h-4 w-[1px] bg-white/10" />
+          <div className="text-left">
+            <h1 className="text-sm font-bold text-white tracking-tighter uppercase">VETO Terminal</h1>
+            <p className="text-[9px] text-president-gold uppercase tracking-widest font-black">
+              {CalendarService.getLabel(day)} • {playerName}
+            </p>
+          </div>
+        </div>
+        
         <div className="flex items-center gap-8 md:gap-12">
-          <StatItem icon={<Scale className="text-president-gold" size={18} />} label="Law" value={stats.law} colorClass="bg-president-gold" />
-          <StatItem icon={<Users className="text-sky-400" size={18} />} label="Humanity" value={stats.humanity} colorClass="bg-sky-400" />
-          <StatItem icon={<ShieldAlert className="text-red-400" size={18} />} label="Order" value={stats.order} colorClass="bg-red-500" />
-          <StatItem icon={<Wallet className="text-emerald-400" size={18} />} label="Budget" value={stats.budget} colorClass="bg-emerald-400" />
+          <StatItem icon={<Scale size={18} />} label="Law" value={stats.law} themeColor="gold" />
+          <StatItem icon={<Users size={18} />} label="Humanity" value={stats.humanity} themeColor="blue" />
+          <StatItem icon={<ShieldAlert size={18} />} label="Order" value={stats.order} themeColor="red" />
+          <StatItem icon={<Wallet size={18} />} label="Budget" value={stats.budget} themeColor="emerald" />
         </div>
       </header>
 
@@ -111,7 +196,12 @@ function App() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ type: 'spring', damping: 20 }}
             >
-              <GameOverScreen reason={gameOverReason} day={day} onRestart={restartGame} />
+              <GameOverScreen 
+                reason={gameOverReason} 
+                day={day} 
+                onRestart={restartGame} 
+                onViewGallery={() => setShowGallery(true)}
+              />
             </motion.div>
           ) : (
             <motion.div 
@@ -125,6 +215,7 @@ function App() {
                   scenario={currentScenario}
                   day={day}
                   onChoice={handleChoice}
+                  disabled={isLoading}
                 />
               )}
               
