@@ -1,0 +1,126 @@
+[
+  {
+    "id": "CHAIN-SAND-01",
+    "type": "normal",
+    "title": "Diplomasi Pasir: Tawaran Investasi",
+    "narrative": "Negara tetangga menawarkan paket investasi infrastruktur 'Smart City' senilai $5 Miliar. Syaratnya: Anda harus mencabut larangan ekspor pasir laut yang sudah berlaku selama 20 tahun. Mereka butuh pasir untuk reklamasi wilayah mereka.",
+    "context_tags": ["Geopolitics", "Economy"],
+    "options": [
+      {
+        "label": "Izinkan Ekspor (Demi Investasi)",
+        "impact": { "law": -5, "humanity": -10, "order": 5, "budget": 35 },
+        "legal_basis": "PP No. 26 Tahun 2023 tentang Pengelolaan Hasil Sedimentasi di Laut.",
+        "is_trap": false,
+        "trigger_flags": ["SAND_EXPORT_ACTIVE"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Tolak (Lindungi Ekosistem)",
+        "impact": { "law": 10, "humanity": 15, "order": -5, "budget": -20 },
+        "legal_basis": "Prinsip Keberlanjutan Lingkungan Hidup.",
+        "is_trap": false,
+        "trigger_flags": ["SAND_EXPORT_BANNED"],
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "CHAIN-SAND-02",
+    "type": "crucial",
+    "required_flags": ["SAND_EXPORT_ACTIVE"],
+    "title": "‼️ DAMPAK: Tenggelamnya Pulau Kecil",
+    "narrative": "Laporan intelijen lingkungan menunjukkan 3 pulau kecil di Kepulauan Riau mulai tenggelam akibat pengerukan pasir masif. Nelayan lokal kehilangan mata pencaharian dan mulai melakukan sabotase terhadap kapal keruk.",
+    "context_tags": ["Disaster", "Civil Unrest"],
+    "options": [
+      {
+        "label": "Tindak Tegas Sabotase Nelayan",
+        "impact": { "law": 5, "humanity": -30, "order": 20, "budget": 10 },
+        "legal_basis": "Objek Vital Nasional.",
+        "is_trap": false,
+        "trigger_flags": ["NELAYAN_CRUSHED"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Hentikan Ekspor & Evaluasi",
+        "impact": { "law": 15, "humanity": 20, "order": -15, "budget": -40 },
+        "legal_basis": "Audit Lingkungan Darurat.",
+        "is_trap": false,
+        "trigger_flags": ["SAND_EXPORT_STOPPED"],
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "CHAIN-SAND-03",
+    "type": "crucial",
+    "required_flags": ["NELAYAN_CRUSHED"],
+    "title": "‼️ PEMAKZULAN: Skandal Ekspor Pasir",
+    "narrative": "Investigasi jurnalis mengungkap bahwa perusahaan ekspor pasir tersebut dimiliki oleh kerabat dekat menteri senior Anda. Demonstrasi mahasiswa menuntut keadilan bagi nelayan dan transparansi izin. Stabilitas negara di ujung tanduk.",
+    "context_tags": ["KRISIS", "Political Scandal"],
+    "options": [
+      {
+        "label": "Korbankan Menteri Terkait",
+        "impact": { "law": 25, "humanity": 15, "order": -40, "budget": -5 },
+        "legal_basis": "Reshuffle Kabinet Darurat.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Bela Kabinet & Gunakan UU ITE",
+        "impact": { "law": -50, "humanity": -50, "order": 30, "budget": 0 },
+        "legal_basis": "Stabilitas Nasional di Atas Segalanya.",
+        "is_trap": true,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "CHAIN-IKN-01",
+    "type": "normal",
+    "title": "IKN: Percepatan Pembangunan",
+    "narrative": "Anda ingin meresmikan Ibu Kota Baru sebelum masa jabatan berakhir. Kontraktor meminta izin untuk bekerja 24 jam dan melompati beberapa prosedur AMDAL agar target tercapai tepat waktu.",
+    "context_tags": ["Infrastructure", "Ambition"],
+    "options": [
+      {
+        "label": "Izinkan (Percepatan Total)",
+        "impact": { "law": -10, "humanity": -5, "order": 10, "budget": -15 },
+        "legal_basis": "Diskresi Presiden untuk Proyek Strategis.",
+        "is_trap": false,
+        "trigger_flags": ["IKN_FAST_TRACK"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Patuhi Prosedur (Sesuai Aturan)",
+        "impact": { "law": 15, "humanity": 10, "order": -5, "budget": 5 },
+        "legal_basis": "Ketaatan pada Regulasi Lingkungan.",
+        "is_trap": false,
+        "trigger_flags": ["IKN_STANDARD"],
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "CHAIN-IKN-02",
+    "type": "crucial",
+    "required_flags": ["IKN_FAST_TRACK"],
+    "title": "‼️ KRISIS: Kegagalan Konstruksi",
+    "narrative": "Akibat percepatan tanpa audit yang benar, salah satu gedung kementerian utama runtuh saat pembangunan, menewaskan puluhan pekerja. Oposisi menyebut ini sebagai 'Tumbal Ambisi' Anda.",
+    "context_tags": ["Disaster", "Ethics"],
+    "options": [
+      {
+        "label": "Tanggung Jawab & Mundurkan Target",
+        "impact": { "law": 20, "humanity": 15, "order": -25, "budget": -30 },
+        "legal_basis": "Akuntabilitas Pejabat Publik.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Salahkan Kontraktor (Kambing Hitam)",
+        "impact": { "law": -15, "humanity": -20, "order": 10, "budget": 5 },
+        "legal_basis": "Tanggung Jawab Perdata Korporasi.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  }
+]

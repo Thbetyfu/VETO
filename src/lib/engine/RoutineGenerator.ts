@@ -14,7 +14,15 @@ export class RoutineGenerator {
    * Menghasilkan skenario rutin secara prosedural.
    */
   async generate(day: number, profile: string, stats: Impact): Promise<Scenario> {
-    const categories = ['Administrasi', 'Kunjungan Kerja', 'Rapat Kabinet', 'Diplomasi Ringan', 'Sosialisasi UU'];
+    const categories = [
+      'Intrik Internal', 
+      'Skandal Media', 
+      'Lobi Gelap', 
+      'Nepotisme', 
+      'Bisikan Ajudan',
+      'Diplomasi Belakang Layar',
+      'Ketegangan Koalisi'
+    ];
     const category = categories[Math.floor(Math.random() * categories.length)];
 
     try {
@@ -25,23 +33,27 @@ export class RoutineGenerator {
         routineCategory: category,
         routineDay: day
       });
-      // response dari routine selalu diset kembalikan raw text (string) di WebLLMService
+      
       const jsonStr = (typeof response === 'string' ? response : JSON.stringify(response)).replace(/```json|```/g, '').trim();
       const data = JSON.parse(jsonStr);
 
+      // Konversi ke format Scenario
       return {
-        id: `routine-${day}-${Date.now()}`,
-        title: data.title,
-        narrative: data.description || "Melaksanakan tugas kenegaraan rutin.",
-        context_tags: [category, 'Rutin'],
+        id: `ISTANA-${day}-${Math.floor(Math.random() * 1000)}`,
         type: 'normal',
-        options: [
-          this.createOption(data.option_a, 'pro-stabilitas'),
-          this.createOption(data.option_b, 'pro-rakyat')
-        ]
-      };
+        title: data.title,
+        narrative: data.description,
+        context_tags: [category, 'Intrik Istana'],
+        options: data.options.map((opt: any) => ({
+          label: opt.label,
+          impact: opt.impact,
+          legal_basis: opt.legal_basis || 'Diskresi Presiden',
+          is_trap: false,
+          next_node: 'DYNAMIC_NEXT'
+        }))
+      } as Scenario;
     } catch (error) {
-      // Fallback jika AI gagal
+      console.error("[RoutineGenerator] AI Generation failed, using fallback", error);
       return this.getFallbackScenario(day, category);
     }
   }
@@ -65,8 +77,8 @@ export class RoutineGenerator {
   private getFallbackScenario(day: number, category: string): Scenario {
     return {
       id: `fallback-${day}`,
-      title: `Tugas Rutin: ${category}`,
-      narrative: `Anda memiliki agenda rutin terkait ${category} di Istana Negara.`,
+      title: `Laporan Intelijen: ${category}`,
+      narrative: `Laporan rahasia masuk ke meja Anda mengenai ${category}. Situasi ini memerlukan respons segera dari kepemimpinan Anda.`,
       context_tags: [category, 'Fallback'],
       type: 'normal',
       options: [

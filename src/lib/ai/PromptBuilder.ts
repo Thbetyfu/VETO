@@ -10,6 +10,7 @@ export interface ScenarioContext {
   routineDay?: number;
   toneType?: 'CRISIS' | 'BUREAUCRATIC' | 'NORMAL' | string;
   realityKeyword?: string;
+  activeFlags?: string[];
 }
 
 const NARRATIVE_SYSTEM_PROMPT = `Anda adalah Narrative Engine untuk game simulasi strategi politik. Tugas Anda adalah merender hasil keputusan pemain menjadi narasi dramatis, mendesak, dan realistis.
@@ -38,7 +39,11 @@ Output:
   "narasi_final": "Supremasi hukum berdiri tegak bak benteng besi, namun bayarannya adalah darah di jalanan.\\n\\nPengerahan aparat bersenjata lengkap ke pusat kota berhasil membungkam demonstran, menyisakan keheningan yang mencekam dan kemarahan yang membara di bawah tanah."
 }`;
 
-const ROUTINE_SYSTEM_PROMPT = `Anda adalah Generator Skenario Game. Anda HANYA boleh membalas dengan format JSON mentah tanpa markdown, tanpa penjelasan apa pun.`;
+const ROUTINE_SYSTEM_PROMPT = `Anda adalah penulis skenario drama politik (seperti House of Cards). Tugas Anda adalah membuat dinamika kekuasaan kepresidenan yang penuh intrik, lobi gelap, dan ketegangan internal. 
+
+PENTING: Jangan menyebut skenario ini sebagai "tugas rutin" atau "harian". Anggap ini sebagai kejadian mendadak di koridor istana.
+
+Anda wajib memberikan respons HANYA dalam format JSON mentah tanpa penjelasan.`;
 
 const TONAL_MAP: Record<string, string> = {
   'CRISIS': "Gunakan kalimat pendek. Nada panik, mendesak, seperti dikejar waktu.",
@@ -71,13 +76,18 @@ Arketipe Presiden saat ini: ${context.profile}.
 
 ${semanticState}
 
-Format output HARUS JSON mentah:
+Format output HARUS JSON mentah dengan 3 sampai 4 opsi pilihan:
 {
-  "title": "Judul Singkat",
-  "description": "Deskripsi singkat tugas harian (max 2 kalimat)",
-  "option_a": "Pilihan Tindakan A",
-  "option_b": "Pilihan Tindakan B"
-}`;
+  "title": "Judul Menarik",
+  "description": "Narasi intrik singkat (max 3 kalimat)",
+  "options": [
+    { "label": "Tindakan A", "impact": { "law": 0, "humanity": 0, "order": 0, "budget": 0 }, "legal_basis": "..." },
+    { "label": "Tindakan B", "impact": { "law": 0, "humanity": 0, "order": 0, "budget": 0 }, "legal_basis": "..." },
+    { "label": "Tindakan C", "impact": { "law": 0, "humanity": 0, "order": 0, "budget": 0 }, "legal_basis": "..." }
+  ]
+}
+
+PENTING: Nilai impact harus antara -8 sampai +8. Sesuaikan dengan konsekuensi logis.`;
       return {
         system: ROUTINE_SYSTEM_PROMPT,
         user: userPrompt.trim()
@@ -102,6 +112,10 @@ Format output HARUS JSON mentah:
       userPrompt += `.\nKeputusan terakhir Presiden: "${context.recentEvent}"]`;
     } else {
       userPrompt += `]`;
+    }
+
+    if (context.activeFlags && context.activeFlags.length > 0) {
+      userPrompt += `\n\nREKAM JEJAK KEPUTUSAN (FLAGS):\n${context.activeFlags.join(', ')}\nJika ada flag yang relevan dengan skenario saat ini, singgunglah dalam narasi sebagai konsekuensi dari tindakan masa lalu.`;
     }
 
     return {

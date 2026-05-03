@@ -13,6 +13,15 @@ export interface IP2PService {
   getLatestState(playerName: string, callback: (state: any) => void): void;
   saveAITelemetry(telemetryData: any): void;
   getAITelemetry(callback: (data: any[]) => void): void;
+  /** Fase 1: Sinkronisasi statistik ke World State desentralisasi */
+  syncGlobalMetrics(stats: any): void;
+  getWorldState(callback: (metrics: any) => void): void;
+
+  /** Fase 3: Multiplayer Diplomacy Mode */
+  createRoom(hostName: string, callback: (roomId: string) => void): void;
+  joinRoom(roomId: string, playerName: string, onUpdate: (roomData: any) => void): void;
+  submitRoomChoice(roomId: string, playerName: string, scenarioId: string, choiceId: string): void;
+  advanceRoom(roomId: string, nextScenarioId: string): void;
 }
 
 /**
@@ -25,13 +34,16 @@ export class GunP2PService implements IP2PService {
   private user;
   private readonly PEERS = [
     'https://gun-manhattan.herokuapp.com/gun',
-    'https://relay.peer.ooo/gun' // Relay sekunder untuk redundansi
+    'https://relay.peer.ooo/gun',
+    'https://gunjs.herokuapp.com/gun',
+    'https://relay.gun.eco/gun'
   ];
 
   constructor() {
     this.db = Gun({
       peers: this.PEERS,
-      localStorage: true, // Aktifkan Offline-First (IndexDB/LocalStorage)
+      localStorage: true,
+      retry: 1000
     });
     
     // Safety check for SEA module
@@ -169,6 +181,124 @@ export class GunP2PService implements IP2PService {
         }
       }
     });
+  }
+
+  /**
+   * Global World State (Fase 1): Kontribusi statistik ke pool desentralisasi.
+   */
+  syncGlobalMetrics(stats: any): void {
+    // FIX: Gunakan session-based ID agar multi-tab di localhost dianggap peer berbeda
+    if (!(window as any).VETO_PEER_ID) {
+      (window as any).VETO_PEER_ID = `peer_${Math.random().toString(36).slice(2, 10)}`;
+    }
+    const peerId = (window as any).VETO_PEER_ID;
+    
+    this.db.get('veto/world_state').get(peerId).put({
+      ...stats,
+      timestamp: Date.now()
+    });
+  }
+
+  /**
+   * Global World State (Fase 1): Mengambil rata-rata statistik dari seluruh dunia.
+   */
+  getWorldState(callback: (metrics: any) => void): void {
+    const players: Map<string, any> = new Map();
+    
+    this.db.get('veto/world_state').map().on((node, id) => {
+      if (node && node.law !== undefined) {
+        // Hanya hitung data yang masih 'segar' (dalam 24 jam terakhir)
+        if (Date.now() - node.timestamp < 24 * 60 * 60 * 1000) {
+          players.set(id, node);
+        }
+      }
+
+      if (players.size > 0) {
+        const totals = Array.from(players.values()).reduce((acc, curr) => ({
+          law: acc.law + curr.law,
+          humanity: acc.humanity + curr.humanity,
+          order: acc.order + curr.order,
+          budget: acc.budget + curr.budget
+        }), { law: 0, humanity: 0, order: 0, budget: 0 });
+
+        const count = players.size;
+        callback({
+          law: Math.round(totals.law / count),
+          humanity: Math.round(totals.humanity / count),
+          order: Math.round(totals.order / count),
+          budget: Math.round(totals.budget / count),
+          activePeers: count
+        });
+      }
+    });
+  }
+
+  /**
+   * Diplomacy Mode: Membuat Room baru dengan ID unik.
+   */
+  createRoom(hostName: string, callback: (roomId: string) => void): void {
+    const roomId = Math.random().toString(36).slice(2, 7).toUpperCase();
+    const roomRef = this.db.get(`veto/rooms/${roomId}`);
+    
+    roomRef.put({
+      status: 'waiting',
+      currentScenarioId: 'SCN-15-01',
+      createdAt: Date.now()
+    });
+
+    // Tambahkan host sebagai pemain pertama
+    roomRef.get('players').get(hostName).put({ joinedAt: Date.now() });
+    
+    callback(roomId);
+  }
+
+  /**
+   * Diplomacy Mode: Bergabung ke Room yang sudah ada.
+   */
+  joinRoom(roomId: string, playerName: string, onUpdate: (roomData: any) => void): void {
+    const roomRef = this.db.get(`veto/rooms/${roomId}`);
+    
+    // Tambahkan pemain ke daftar
+    roomRef.get('players').get(playerName).put({ joinedAt: Date.now() });
+
+    // Listen ke seluruh perubahan di room
+    roomRef.on((data) => {
+      // Ambil data pemain secara detail
+      roomRef.get('players').once((players) => {
+        // Ambil data respons secara detail
+        roomRef.get('responses').once((responses) => {
+          onUpdate({
+            ...data,
+            players: players || {},
+            responses: responses || {}
+          });
+        });
+      });
+    });
+  }
+
+  /**
+   * Diplomacy Mode: Submit pilihan ke kolektif.
+   */
+  submitRoomChoice(roomId: string, playerName: string, scenarioId: string, choiceId: string): void {
+    this.db.get(`veto/rooms/${roomId}/responses`).get(playerName).put({
+      scenarioId,
+      choiceId,
+      timestamp: Date.now()
+    });
+  }
+
+  /**
+   * Diplomacy Mode: Lanjut ke skenario berikutnya (Admin/Host trigger).
+   */
+  advanceRoom(roomId: string, nextScenarioId: string): void {
+    const roomRef = this.db.get(`veto/rooms/${roomId}`);
+    roomRef.put({ 
+      currentScenarioId: nextScenarioId,
+      status: 'playing' 
+    });
+    // Reset respons untuk turn berikutnya
+    roomRef.get('responses').put(null);
   }
 }
 

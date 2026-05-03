@@ -76,4 +76,5 @@ export interface AIFeedbackData {
   tone: 'praise' | 'neutral' | 'critique';
   message: string;
   moralProfile: string; // Contoh: "Pragmatik-Humanis"
+  isStreaming?: boolean; // Fase 11: Flag streaming
 }

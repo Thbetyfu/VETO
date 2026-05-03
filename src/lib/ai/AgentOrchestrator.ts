@@ -15,7 +15,7 @@ export class AgentOrchestrator {
     this.aiService = aiService;
   }
 
-  async generateMultiAgentNarrative(context: ScenarioContext): Promise<NarrativeResponse> {
+  async generateMultiAgentNarrative(context: ScenarioContext, onStream?: (partial: string) => void): Promise<NarrativeResponse> {
     const semanticState = StateTranslator.translateImpactToSemantic(context.stats);
 
     // ==========================================
@@ -23,7 +23,7 @@ export class AgentOrchestrator {
     // Fokus pada kausalitas logis
     // ==========================================
     const drafterSystem = "Kamu adalah mesin kausalitas logis. Input: State & Keputusan. Output: 3 poin dampak singkat (max 10 kata per poin). Jawab HANYA poin-poinnya.";
-    const drafterUser = `STATE: ${semanticState}\nKEPUTUSAN: ${context.recentEvent || 'Tidak ada'}`;
+    const drafterUser = `STATE: ${semanticState}\nKEPUTUSAN SAAT INI: ${context.recentEvent || 'Tidak ada'}\nREKAM JEJAK (FLAGS): ${context.activeFlags?.join(', ') || 'Belum ada'}`;
 
     const drafterMessages = [
       { role: "system", content: drafterSystem },
@@ -55,10 +55,19 @@ ${editorSystemBase.split('INSTRUKSI GAYA BAHASA:')[1] ? 'GAYA BAHASA:' + editorS
       { role: "user", content: editorUser }
     ];
 
-    const editorOutputRaw = await this.aiService.chatRaw(editorMessages, {
-      temperature: 0.7, 
-      max_tokens: 500,
-    });
+    const editorOutputRaw = await this.aiService.chatStream(
+      editorMessages,
+      (token, fullText) => {
+        if (onStream) {
+          const partial = this.extractPartialNarrative(fullText);
+          if (partial) onStream(partial);
+        }
+      },
+      {
+        temperature: 0.7,
+        max_tokens: 500,
+      }
+    );
 
     try {
       const jsonStr = editorOutputRaw.replace(/```json|```/g, '').trim();
@@ -71,5 +80,28 @@ ${editorSystemBase.split('INSTRUKSI GAYA BAHASA:')[1] ? 'GAYA BAHASA:' + editorS
       console.warn("[AgentOrchestrator] Failed to parse JSON from Editor, returning fallback", e);
       return { analisis_situasi: drafterOutput, narasi_final: editorOutputRaw };
     }
+  }
+
+  /**
+   * extractPartialNarrative (Fase 11): 
+   * Mengekstrak konten dari field "narasi_final" di tengah proses streaming JSON.
+   */
+  private extractPartialNarrative(text: string): string {
+    const key = '"narasi_final": "';
+    const index = text.indexOf(key);
+    if (index === -1) return "";
+    
+    let partial = text.substring(index + key.length);
+    
+    // Bersihkan karakter escape jika ada
+    partial = partial.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+    
+    // Jika sudah ada tanda kutip penutup (berarti stream selesai), potong di sana
+    const closingQuoteIndex = partial.indexOf('"');
+    if (closingQuoteIndex !== -1) {
+      partial = partial.substring(0, closingQuoteIndex);
+    }
+    
+    return partial;
   }
 }

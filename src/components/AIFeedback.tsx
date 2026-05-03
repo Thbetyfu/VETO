@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, ThumbsUp, Minus, ThumbsDown, Loader2, Flag } from 'lucide-react';
+import { Brain, ThumbsUp, Minus, ThumbsDown, Loader2, Flag, AlertTriangle, Zap } from 'lucide-react';
 import type { AIFeedbackData, AIStatus } from '../types/scenario';
 import { p2pService } from '../lib/p2p/P2PService';
 
@@ -8,6 +8,7 @@ interface AIFeedbackProps {
   feedback: AIFeedbackData | null;
   status: AIStatus;
   loadProgress: number;
+  isStuck?: boolean;
 }
 
 /**
@@ -19,7 +20,7 @@ interface AIFeedbackProps {
  * 3. generating → indikator "AI sedang berpikir"
  * 4. ready + feedback → panel analisis dengan tone berwarna
  */
-export const AIFeedback = ({ feedback, status, loadProgress }: AIFeedbackProps) => {
+export const AIFeedback = ({ feedback, status, loadProgress, isStuck }: AIFeedbackProps) => {
   const [hasRated, setHasRated] = useState(false);
 
   const handleRate = (isPositive: boolean) => {
@@ -66,31 +67,46 @@ export const AIFeedback = ({ feedback, status, loadProgress }: AIFeedbackProps) 
               className="h-full bg-president-accent rounded-full"
             />
           </div>
-          <p className="text-[10px] text-slate-600 mt-2">AI dimuat di latar belakang — game tetap bisa dimainkan.</p>
+          
+          {isStuck ? (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-center gap-2 mt-3 p-2 rounded bg-red-500/10 border border-red-500/20"
+            >
+              <AlertTriangle size={12} className="text-red-400" />
+              <p className="text-[10px] text-red-300">
+                Deteksi: Loading tersangkut. Cek koneksi atau gunakan <span className="font-bold">Mode Heuristik (Ringan)</span>.
+              </p>
+            </motion.div>
+          ) : (
+            <p className="text-[10px] text-slate-600 mt-2">AI dimuat di latar belakang — game tetap bisa dimainkan.</p>
+          )}
         </motion.div>
       )}
 
-      {/* AI Generating */}
-      {status === 'generating' && (
+      {/* AI Generating Status (Initial) */}
+      {status === 'generating' && !feedback && (
         <motion.div
-          key="generating"
+          key="generating-start"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="mt-4 glass-card p-4 flex items-center gap-3"
         >
           <Loader2 size={16} className="text-president-accent animate-spin shrink-0" />
-          <span className="text-[11px] text-slate-400 uppercase tracking-widest">Rakyat sedang menilai keputusan Anda...</span>
+          <span className="text-[11px] text-slate-400 uppercase tracking-widest">
+            Menganalisis Kausalitas & Logika...
+          </span>
         </motion.div>
       )}
 
-      {/* Feedback Result */}
-      {status === 'ready' && feedback && (
+      {/* Feedback Result (Including Streaming) */}
+      {(feedback) && (
         <motion.div
-          key="feedback"
+          key="feedback-result"
           initial={{ opacity: 0, y: 12, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 250, damping: 22 } }}
-          exit={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
           className={`mt-4 glass-card p-5 border-l-4 ${toneStyle[feedback.tone].border}`}
         >
           <div className="flex items-center justify-between mb-3">
@@ -100,38 +116,42 @@ export const AIFeedback = ({ feedback, status, loadProgress }: AIFeedbackProps) 
               </div>
               <div>
                 <p className={`text-[10px] font-bold uppercase tracking-widest ${toneStyle[feedback.tone].text}`}>
-                  Suara Rakyat
+                  {feedback.isStreaming ? 'AI SEDANG MENULIS...' : 'Suara Rakyat'}
                 </p>
                 <p className="text-[10px] text-slate-500">
-                  Profil Kepemimpinan: <span className="text-slate-300 font-semibold">{feedback.moralProfile}</span>
+                  Profil: <span className="text-slate-300 font-semibold">{feedback.moralProfile}</span>
                 </p>
               </div>
             </div>
             
             {/* Telemetry UI (Fase 10) */}
-            {!hasRated && (
+            {!feedback.isStreaming && !hasRated && (
               <div className="flex items-center gap-1 opacity-60 hover:opacity-100 transition-opacity">
                 <button 
                   onClick={() => handleRate(true)}
                   className="p-1 hover:bg-white/10 rounded-md transition-colors"
-                  title="Masuk akal"
                 >
                   <ThumbsUp size={14} className="text-slate-400" />
                 </button>
                 <button 
                   onClick={() => handleRate(false)}
                   className="p-1 hover:bg-white/10 rounded-md transition-colors"
-                  title="Kalimat kaku / Tidak masuk akal"
                 >
                   <Flag size={14} className="text-slate-400" />
                 </button>
               </div>
             )}
-            {hasRated && (
-              <span className="text-[10px] text-slate-500 italic">Terima kasih atas masukannya.</span>
-            )}
           </div>
-          <p className="text-sm text-slate-300 leading-relaxed italic">"{feedback.message}"</p>
+          <p className="text-sm text-slate-300 leading-relaxed italic relative">
+            "{feedback.message}"
+            {feedback.isStreaming && (
+              <motion.span 
+                animate={{ opacity: [0, 1, 0] }}
+                transition={{ duration: 0.8, repeat: Infinity }}
+                className="inline-block w-1.5 h-4 bg-president-accent ml-1 align-middle"
+              />
+            )}
+          </p>
         </motion.div>
       )}
     </AnimatePresence>

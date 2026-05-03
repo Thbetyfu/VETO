@@ -102,10 +102,10 @@ export class GameEngineCore {
       }
       
       // 3. Update State (Fase 15.17: Check for Ending)
-      const isGameOver = combinedState.day >= 720;
+      const isGameOver = combinedState.isGameOver || combinedState.day >= 720;
       let ending = undefined;
       
-      if (isGameOver) {
+      if (isGameOver && combinedState.day >= 720) {
         const evaluation = EndingManager.evaluate(combinedState);
         ending = {
           title: evaluation.title,
@@ -117,6 +117,7 @@ export class GameEngineCore {
       const finalState: GameState = {
         ...combinedState,
         currentScenario: isGameOver ? null : nextScenario,
+        isGameOver: isGameOver,
         ending: ending
       };
 

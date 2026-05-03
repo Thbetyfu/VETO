@@ -12,6 +12,8 @@ export const useWebLLM = () => {
   const [status, setStatus] = useState<AIStatus>('idle');
   const [loadProgress, setLoadProgress] = useState(0);
   const [feedback, setFeedback] = useState<AIFeedbackData | null>(null);
+  const [isStuck, setIsStuck] = useState(false);
+  const watchdogTimer = useRef<any>(null);
   
   // Singleton instances
   const aiService = useMemo(() => new WebLLMService(), []);
@@ -26,37 +28,74 @@ export const useWebLLM = () => {
     }
 
     setStatus('loading');
+    setIsStuck(false);
+
+    // Watchdog: Jika dalam 20 detik tetap 0%, tandai sebagai stuck
+    watchdogTimer.current = setTimeout(() => {
+      setIsStuck(true);
+      console.warn('[VETO AI] Loading stuck at 0%. Possibly network or header issue.');
+    }, 20000);
+
     try {
       await aiService.init((progress) => {
         setLoadProgress(progress);
+        if (progress > 0 && watchdogTimer.current) {
+          clearTimeout(watchdogTimer.current);
+          setIsStuck(false);
+        }
       });
+      if (watchdogTimer.current) clearTimeout(watchdogTimer.current);
       setStatus('ready');
     } catch (err) {
       console.error('[VETO AI] Failed to init AI:', err);
       setStatus('error');
+      if (watchdogTimer.current) clearTimeout(watchdogTimer.current);
     }
   }, [aiService]);
 
   const generateFeedback = useCallback(async (
     lastChoice: string, 
-    context: { stats: Impact, profile: string, toneType?: string, realityTrend?: string }
+    context: { stats: Impact, profile: string, toneType?: string, realityTrend?: string, activeFlags?: string[] }
   ) => {
-    if (status !== 'ready') return;
+    // Jika stuck, langsung masuk ke mode Heuristik (Fase 15.20: Auto-Fallback)
+    if (isStuck || status !== 'ready') {
+      console.log("[VETO AI] Using Heuristic Fallback Engine...");
+      setFeedback({
+        tone: 'neutral',
+        message: `Keputusan Anda tentang "${lastChoice}" telah dicatat. Sebagai ${context.profile}, Anda memilih untuk memprioritaskan stabilitas, meskipun sejarah akan mencatat konsekuensi dari flags: ${context.activeFlags?.join(', ') || 'awal baru'}.`,
+        moralProfile: context.profile,
+        isStreaming: false
+      });
+      return;
+    }
 
     setStatus('generating');
     try {
-      const result = await orchestrator.generateMultiAgentNarrative({
-        stats: context.stats,
-        profile: context.profile,
-        recentEvent: lastChoice,
-        toneType: context.toneType,
-        realityKeyword: context.realityTrend
-      });
+      const result = await orchestrator.generateMultiAgentNarrative(
+        {
+          stats: context.stats,
+          profile: context.profile,
+          recentEvent: lastChoice,
+          toneType: context.toneType,
+          realityKeyword: context.realityTrend,
+          activeFlags: context.activeFlags
+        },
+        (partial) => {
+          // Fase 11: Update UI secara real-time (streaming)
+          setFeedback(prev => ({
+            tone: 'neutral',
+            message: partial,
+            moralProfile: context.profile,
+            isStreaming: true
+          }));
+        }
+      );
       
       setFeedback({
         tone: 'neutral', // Nanti bisa di-improve berbasis Drafter output
         message: result.narasi_final,
-        moralProfile: context.profile
+        moralProfile: context.profile,
+        isStreaming: false
       });
       
       if (result.analisis_situasi) {
@@ -76,6 +115,7 @@ export const useWebLLM = () => {
     initModel, 
     generateFeedback, 
     clearFeedback: () => setFeedback(null),
-    aiService: aiService as IAIService
+    aiService: aiService as IAIService,
+    isStuck
   };
 };

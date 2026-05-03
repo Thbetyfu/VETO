@@ -4,7 +4,7 @@ import { ShieldCheck, BrainCircuit, ArrowRight, BookOpen } from 'lucide-react';
 import { PlayerService } from '../lib/player/PlayerService';
 
 interface PrologueProps {
-  onStart: (name: string) => void;
+  onStart: (name: string, mode: 'single' | 'multi', roomOptions?: { action: 'create' | 'join', roomId?: string }) => void;
   aiStatus: string;
   loadProgress: number;
 }
@@ -15,7 +15,11 @@ interface PrologueProps {
  * Menambahkan badge penyelarasan kurikulum nasional dan pembersihan visual akhir.
  */
 export const Prologue: React.FC<PrologueProps> = ({ onStart, aiStatus, loadProgress }) => {
+  const [step, setStep] = useState<'identity' | 'mode' | 'room'>('identity');
   const [name, setName] = useState('');
+  const [gameMode, setGameMode] = useState<'single' | 'multi'>('single');
+  const [roomId, setRoomId] = useState('');
+  
   const isReady = aiStatus === 'ready' || aiStatus === 'error' || aiStatus === 'idle';
   const isValid = PlayerService.isValid(name);
 
@@ -76,74 +80,133 @@ export const Prologue: React.FC<PrologueProps> = ({ onStart, aiStatus, loadProgr
           </motion.div>
         </div>
 
-        {/* Input Identity Section */}
-        <div className="space-y-8">
-          <div className="relative max-w-sm mx-auto">
-            <input 
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ketikkan Nama Anda..."
-              className="neural-input w-full text-center text-lg tracking-wide bg-transparent border-b border-white/20 py-3 text-white focus:border-president-gold outline-none transition-all"
-            />
-            <label className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 bg-president-dark text-[9px] text-president-gold uppercase tracking-[0.3em] font-black">
-              Identitas Presiden
-            </label>
-          </div>
+        <AnimatePresence mode="wait">
+          {step === 'identity' && (
+            <motion.div 
+              key="step-identity"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
+            >
+              <div className="relative max-w-sm mx-auto">
+                <input 
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ketikkan Nama Anda..."
+                  className="neural-input w-full text-center text-lg tracking-wide bg-transparent border-b border-white/20 py-3 text-white focus:border-president-gold outline-none transition-all"
+                />
+                <label className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 bg-president-dark text-[9px] text-president-gold uppercase tracking-[0.3em] font-black">
+                  Identitas Presiden
+                </label>
+              </div>
 
-          {/* AI Intelligence Status */}
-          <div className="flex flex-col items-center gap-3">
-            {aiStatus === 'loading' ? (
-              <div className="space-y-3">
-                <div className="flex items-center justify-center gap-2 text-[10px] text-slate-500 uppercase tracking-widest font-medium">
-                  <BrainCircuit size={14} className="animate-spin text-president-gold" />
-                  <span>Activating Neural Core ({loadProgress}%)</span>
+              {isValid && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setStep('mode')}
+                  className="flex items-center gap-3 mx-auto px-10 py-4 bg-white/10 border border-white/20 text-white font-bold uppercase tracking-widest text-[10px] rounded-full hover:bg-white/20 transition-all"
+                >
+                  Konfirmasi Identitas <ArrowRight size={14} />
+                </motion.button>
+              )}
+            </motion.div>
+          )}
+
+          {step === 'mode' && (
+            <motion.div 
+              key="step-mode"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <h2 className="text-president-gold text-xs font-black uppercase tracking-[0.4em]">Pilih Paradigma Kekuasaan</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl mx-auto">
+                <button 
+                  onClick={() => onStart(name, 'single')}
+                  className="p-8 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left group"
+                >
+                  <div className="text-white font-bold mb-2 group-hover:text-president-gold transition-colors">SINGLEPLAYER</div>
+                  <p className="text-[10px] text-slate-500 leading-relaxed uppercase tracking-wider">Kendalikan negara secara absolut. Keputusan murni di tangan Anda.</p>
+                </button>
+                <button 
+                  onClick={() => setStep('room')}
+                  className="p-8 rounded-2xl border border-president-gold/20 bg-president-gold/5 hover:bg-president-gold/10 transition-all text-left group"
+                >
+                  <div className="text-president-gold font-bold mb-2">MULTIPLAYER (P2P)</div>
+                  <p className="text-[10px] text-slate-500 leading-relaxed uppercase tracking-wider">Bergabung dalam diplomasi global. Setiap keputusan butuh mufakat.</p>
+                </button>
+              </div>
+              <button onClick={() => setStep('identity')} className="text-[9px] text-slate-600 hover:text-white uppercase tracking-widest">Kembali</button>
+            </motion.div>
+          )}
+
+          {step === 'room' && (
+            <motion.div 
+              key="step-room"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.1 }}
+              className="space-y-8"
+            >
+              <h2 className="text-president-gold text-xs font-black uppercase tracking-[0.4em]">Inisiasi Hubungan Internasional</h2>
+              <div className="flex flex-col gap-4 max-w-sm mx-auto">
+                <button 
+                  onClick={() => onStart(name, 'multi', { action: 'create' })}
+                  className="w-full py-4 bg-president-gold text-black font-black uppercase tracking-widest text-[10px] rounded-xl"
+                >
+                  Bentuk Koalisi Baru (Create)
+                </button>
+                
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/5"></div></div>
+                  <div className="relative flex justify-center text-[8px] uppercase text-slate-700 bg-president-dark px-2">ATAU</div>
                 </div>
-                <div className="w-48 h-1 bg-white/5 rounded-full overflow-hidden">
-                  <motion.div
-                    className="h-full bg-president-gold"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${loadProgress}%` }}
+
+                <div className="space-y-3">
+                  <input 
+                    type="text"
+                    value={roomId}
+                    onChange={(e) => setRoomId(e.target.value.toUpperCase())}
+                    placeholder="Masukan Kode Room..."
+                    className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-6 text-center text-white text-sm tracking-[0.5em] outline-none focus:border-president-gold transition-all"
                   />
+                  {roomId.length > 3 && (
+                    <button 
+                      onClick={() => onStart(name, 'multi', { action: 'join', roomId })}
+                      className="w-full py-4 border border-white/20 text-white font-bold uppercase tracking-widest text-[10px] rounded-xl hover:bg-white/5"
+                    >
+                      Bergabung ke Aliansi (Join)
+                    </button>
+                  )}
                 </div>
               </div>
-            ) : (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex items-center gap-2 text-[10px] text-emerald-500 uppercase tracking-widest font-black"
-              >
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse" />
-                <span>Advanced AI Synchronized</span>
-              </motion.div>
-            )}
-          </div>
-        </div>
+              <button onClick={() => setStep('mode')} className="text-[9px] text-slate-600 hover:text-white uppercase tracking-widest">Ganti Mode</button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {/* Action Button */}
-        <div className="pt-4">
-          <AnimatePresence mode="wait">
-            {isValid && (
-              <motion.button
-                key="start-btn"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => onStart(name)}
-                className="group relative flex items-center gap-3 mx-auto px-12 py-5 bg-white text-black font-black uppercase tracking-[0.2em] text-xs rounded-full overflow-hidden transition-all hover:bg-president-gold shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-              >
-                <span>Mulai Menjabat</span>
-                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-              </motion.button>
-            )}
-          </AnimatePresence>
-          
-          {!isValid && (
-            <p className="text-[10px] text-slate-600 uppercase tracking-widest mt-4 animate-pulse">
-              Masukkan identitas untuk inisiasi protokol
-            </p>
+        {/* AI Intelligence Status */}
+        <div className="flex flex-col items-center gap-3 mt-12">
+          {aiStatus === 'loading' ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-center gap-2 text-[10px] text-slate-500 uppercase tracking-widest font-medium">
+                <BrainCircuit size={14} className="animate-spin text-president-gold" />
+                <span>Activating Neural Core ({loadProgress}%)</span>
+              </div>
+            </div>
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-center gap-2 text-[10px] text-emerald-500 uppercase tracking-widest font-black"
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Advanced AI Synchronized</span>
+            </motion.div>
           )}
         </div>
       </div>

@@ -14,7 +14,7 @@ export interface IImpactCalculator {
  * @description SRP: Khusus bertanggung jawab untuk logika pemilihan skenario berikutnya.
  */
 export interface IScenarioPicker {
-  pick(historyIds: string[], streak: number, activeFlags: string[], day: number, profile: string): { scenario: Scenario | null; isPoolEmpty: boolean };
+  pick(historyIds: string[], streak: number, activeFlags: string[], day: number, profile: string, globalMetrics?: any): { scenario: Scenario | null; isPoolEmpty: boolean };
 }
 
 /**

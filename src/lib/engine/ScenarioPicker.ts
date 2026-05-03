@@ -3,21 +3,32 @@ import FASE_15_1 from '../../../scenarios/fase_15_1.json';
 import FASE_15_5 from '../../../scenarios/fase_15_5.json';
 import FASE_15_9 from '../../../scenarios/fase_15_9.json';
 import FASE_15_13 from '../../../scenarios/fase_15_13.json';
+import ADVANCED_CHAINING from '../../../scenarios/advanced_chaining.json';
 import { Scenario } from '../../types/scenario';
 import { IScenarioPicker } from './types';
 
 // Gabungkan semua batch skenario
-const SCENARIOS = [...INITIAL_BATCH, ...FASE_15_1, ...FASE_15_5, ...FASE_15_9, ...FASE_15_13] as Scenario[];
+export const SCENARIOS = [
+  ...INITIAL_BATCH, 
+  ...FASE_15_1, 
+  ...FASE_15_5, 
+  ...FASE_15_9, 
+  ...FASE_15_13,
+  ...ADVANCED_CHAINING
+] as Scenario[];
 
 export class ScenarioPicker implements IScenarioPicker {
-  pick(historyIds: string[], streak: number, activeFlags: string[], day: number, profile: string): { scenario: Scenario | null; isPoolEmpty: boolean } {
+  pick(historyIds: string[], streak: number, activeFlags: string[], day: number, profile: string, globalMetrics?: any): { scenario: Scenario | null; isPoolEmpty: boolean } {
     // 0. Hardcoded Start (Fase 15.1: The Inauguration)
     if (day === 1) {
       const startScenario = SCENARIOS.find(s => s.id === 'SCN-15-01');
       return { scenario: startScenario || null, isPoolEmpty: !startScenario };
     }
 
-    const isCrisisTime = streak >= 5;
+    // Fase 2: Global Butterfly Effect
+    // Jika rata-rata 'Order' dunia rendah, probabilitas krisis meningkat bagi semua orang
+    const globalChaosDrift = globalMetrics && globalMetrics.order < 40;
+    const isCrisisTime = streak >= 5 || globalChaosDrift;
     
     const pool = SCENARIOS.filter(s => {
       // 1. Bukan yang sudah pernah muncul

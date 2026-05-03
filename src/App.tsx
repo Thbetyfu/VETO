@@ -14,6 +14,7 @@ import { CalendarService } from './lib/engine/CalendarService';
 import { ElectionNight } from './components/ElectionNight';
 import { LegacyGallery } from './components/LegacyGallery';
 import { p2pService } from './lib/p2p/P2PService';
+import { GlobalWorldStatus } from './components/GlobalWorldStatus';
 import type { ScenarioOption } from './types/scenario';
 
 /**
@@ -29,7 +30,8 @@ function App() {
     initModel, 
     generateFeedback, 
     clearFeedback,
-    aiService
+    aiService,
+    isStuck
   } = useWebLLM();
   
   const [gameStarted, setGameStarted] = useState(false);
@@ -38,8 +40,16 @@ function App() {
   const [isHapticFlash, setIsHapticFlash] = useState(false);
   const [isElectionNight, setIsElectionNight] = useState(false);
 
-  const { state, isLoading, makeChoice, restartGame, closeReport } = useGameEngine(aiService);
+  const { state, isLoading, makeChoice, restartGame, closeReport, multiplayer } = useGameEngine(aiService, playerName);
   const { stats, day, currentScenario, isGameOver, isReportOpen, gameOverReason, history } = state;
+
+  const handleStart = (name: string, mode: 'single' | 'multi', roomOptions?: any) => {
+    setPlayerName(name);
+    setGameStarted(true);
+    if (mode === 'multi') {
+      multiplayer.init(name, roomOptions.action, roomOptions.roomId);
+    }
+  };
 
   // Mulai muat model AI dengan delay agar tidak mengganggu rendering awal (Latency Zero)
   useEffect(() => {
@@ -86,7 +96,8 @@ function App() {
         stats, 
         profile: state.profile, 
         toneType,
-        realityTrend: state.realityTrend
+        realityTrend: state.realityTrend,
+        activeFlags: state.activeFlags
       });
     }
   };
@@ -105,10 +116,7 @@ function App() {
       <AnimatePresence>
         {!gameStarted && !showGallery && (
           <Prologue 
-            onStart={(name) => {
-              setPlayerName(name);
-              setGameStarted(true);
-            }} 
+            onStart={handleStart} 
             aiStatus={aiStatus}
             loadProgress={loadProgress}
           />
@@ -186,6 +194,10 @@ function App() {
             </p>
           </div>
         </div>
+
+        <div className="w-full lg:w-auto order-last lg:order-none mt-4 lg:mt-0">
+          <GlobalWorldStatus />
+        </div>
         
         <div className="flex items-center gap-8 md:gap-12">
           <StatItem icon={<Scale size={18} />} label="Law" value={stats.law} themeColor="gold" />
@@ -228,13 +240,54 @@ function App() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
             >
+              {multiplayer.active && (
+                <div className="flex flex-col items-center mb-4 gap-2">
+                  <div className="px-4 py-1.5 rounded-full bg-president-gold/20 border border-president-gold/30 flex items-center gap-2">
+                    <span className="text-[10px] font-black text-president-gold tracking-widest uppercase">Room: {multiplayer.roomId}</span>
+                  </div>
+                  {multiplayer.timeLeft !== null && !multiplayer.isWaiting && (
+                    <div className={`text-xl font-black ${multiplayer.timeLeft < 5 ? 'text-red-500 animate-pulse' : 'text-white'}`}>
+                      00:{multiplayer.timeLeft.toString().padStart(2, '0')}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {currentScenario && (
-                <ScenarioCard
-                  scenario={currentScenario}
-                  day={day}
-                  onChoice={handleChoice}
-                  disabled={isLoading}
-                />
+                <div className="relative">
+                  <ScenarioCard
+                    scenario={currentScenario}
+                    day={day}
+                    onChoice={handleChoice}
+                    disabled={isLoading || multiplayer.isWaiting}
+                  />
+                  
+                  <AnimatePresence>
+                    {multiplayer.isWaiting && (
+                      <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="absolute inset-0 z-10 bg-president-dark/80 backdrop-blur-sm rounded-3xl flex flex-col items-center justify-center border border-white/10"
+                      >
+                        <div className="w-12 h-12 border-4 border-president-gold border-t-transparent rounded-full animate-spin mb-4" />
+                        <h3 className="text-white font-black uppercase tracking-widest text-sm">Menunggu Konsensus</h3>
+                        <p className="text-slate-500 text-[10px] uppercase tracking-tighter mt-1">Presiden lain sedang menimbang keputusan...</p>
+                        
+                        <div className="mt-8 flex flex-col items-center gap-2">
+                          <span className="text-[8px] text-slate-600 uppercase font-bold">Responden</span>
+                          <div className="flex gap-1">
+                            {Object.keys(multiplayer.roomData?.responses || {}).map((_, i) => (
+                              <div key={i} className="w-2 h-2 rounded-full bg-president-gold shadow-[0_0_5px_rgba(212,175,55,0.5)]" />
+                            ))}
+                            {[...Array(Math.max(0, Object.keys(multiplayer.roomData?.players || {}).length - Object.keys(multiplayer.roomData?.responses || {}).length))].map((_, i) => (
+                              <div key={i} className="w-2 h-2 rounded-full bg-white/10" />
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               )}
               
               {/* Panel Analisis AI */}
@@ -242,6 +295,7 @@ function App() {
                 feedback={feedback}
                 status={aiStatus}
                 loadProgress={loadProgress}
+                isStuck={isStuck}
               />
             </motion.div>
           )}
@@ -252,8 +306,8 @@ function App() {
       <footer className="fixed bottom-4 text-slate-600 text-[10px] uppercase tracking-[0.25em] flex items-center gap-3">
         <span>VETO V0.2</span>
         <span className="w-1 h-1 rounded-full bg-slate-800" />
-        <span className={aiStatus === 'ready' ? 'text-emerald-500/70' : 'text-slate-500/70'}>
-          {aiStatus === 'ready' ? '🟢 AI ONLINE' : aiStatus === 'loading' ? `⏳ AI SYNC ${loadProgress}%` : '⚡ HEURISTIC'}
+        <span className={aiStatus === 'ready' ? 'text-emerald-500/70' : isStuck ? 'text-amber-500/70' : 'text-slate-500/70'}>
+          {aiStatus === 'ready' ? '🟢 AI ONLINE' : isStuck ? '⚡ HEURISTIC ACTIVE' : aiStatus === 'loading' ? `⏳ AI SYNC ${loadProgress}%` : '⚡ HEURISTIC'}
         </span>
       </footer>
     </div>

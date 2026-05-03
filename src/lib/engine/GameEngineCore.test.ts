@@ -8,7 +8,8 @@ const mockAiService: IAIService = {
   init: vi.fn(),
   analyze: vi.fn(),
   generateRollingSummary: vi.fn(),
-  chatRaw: vi.fn()
+  chatRaw: vi.fn(),
+  chatStream: vi.fn()
 };
 
 describe('GameEngineCore (SOLID - DIP)', () => {

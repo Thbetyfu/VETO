@@ -9,7 +9,8 @@ const dummyAIService: IAIService = {
   init: async () => {},
   analyze: async () => "Dummy analysis",
   generateRollingSummary: async () => "Dummy summary",
-  chatRaw: async () => "Dummy raw response"
+  chatRaw: async () => "Dummy raw response",
+  chatStream: async () => "Dummy stream response"
 };
 
 /**

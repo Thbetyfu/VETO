@@ -15,6 +15,12 @@ describe('ScenarioPicker (SOLID - SRP)', () => {
     expect(scenario?.type).toBe('crucial');
   });
 
+  it('should pick from crucial pool if global order is low (Butterfly Effect)', () => {
+    const globalMetrics = { order: 30 };
+    const { scenario } = picker.pick([], 0, [], 2, 'Pragmatis', globalMetrics);
+    expect(scenario?.type).toBe('crucial');
+  });
+
   it('should pick flagged scenario if flag is active', () => {
     // SCN-03-B butuh flag 'pabrik_terbangun'
     const { scenario } = picker.pick([], 0, ['pabrik_terbangun'], 2, 'Pragmatis');

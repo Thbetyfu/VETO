@@ -19,6 +19,7 @@ export interface IAIService {
   analyze(input: string | ScenarioContext): Promise<NarrativeResponse | string>;
   generateRollingSummary(pastEvents: string[]): Promise<string>;
   chatRaw(messages: any[], options?: any): Promise<string>;
+  chatStream(messages: any[], onToken: (token: string, fullText: string) => void, options?: any): Promise<string>;
 }
 
 /**
@@ -28,20 +29,27 @@ export interface IAIService {
  */
 export class WebLLMService implements IAIService {
   private engine: any | null = null;
-  private modelId = "Phi-3-mini-4k-instruct-q4f16_1-MLC";
+  private modelId = "SmolLM-135M-Instruct-v0.2-q4f16_1-MLC";
 
   async init(onProgress: (p: number) => void): Promise<void> {
-    if (this.engine) return;
+    console.log("[VETO AI] Starting MLCEngine initialization with model:", this.modelId);
     
-    this.engine = await CreateWebWorkerMLCEngine(
-      new Worker(new URL("./worker.ts", import.meta.url), { type: "module" }),
-      this.modelId,
-      {
-        initProgressCallback: (report) => {
-          onProgress(Math.round(report.progress * 100));
-        },
-      }
-    );
+    try {
+      this.engine = await CreateWebWorkerMLCEngine(
+        new Worker(new URL("./worker.ts", import.meta.url), { type: "module" }),
+        this.modelId,
+        {
+          initProgressCallback: (report) => {
+            console.log("[VETO AI] Progress:", report.text);
+            onProgress(Math.round(report.progress * 100));
+          },
+        }
+      );
+      console.log("[VETO AI] MLCEngine ready.");
+    } catch (e) {
+      console.error("[VETO AI] MLCEngine init failed:", e);
+      throw e;
+    }
   }
 
   async analyze(input: string | ScenarioContext): Promise<NarrativeResponse | string> {
@@ -101,6 +109,29 @@ export class WebLLMService implements IAIService {
       ...options
     });
     return reply.choices[0].message.content || "";
+  }
+
+  /**
+   * chatStream (Fase 11): Inferensi dengan mode streaming untuk UI responsif.
+   */
+  async chatStream(messages: any[], onToken: (token: string, fullText: string) => void, options: any = {}): Promise<string> {
+    if (!this.engine) throw new Error("AI Engine not initialized");
+    
+    const chunks = await this.engine.chat.completions.create({
+      messages: messages,
+      temperature: options.temperature ?? 0.7,
+      stream: true, // AKTIFKAN STREAMING
+      ...options
+    });
+
+    let fullText = "";
+    for await (const chunk of chunks) {
+      const token = chunk.choices[0]?.delta.content || "";
+      fullText += token;
+      onToken(token, fullText);
+    }
+
+    return fullText;
   }
 
   private parseLLMResponse(rawText: string): NarrativeResponse | string {

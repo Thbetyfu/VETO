@@ -31,20 +31,14 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, day, onCho
           isCrucial ? 'border-red-500/20 shadow-[0_0_50px_rgba(239,68,68,0.1)]' : ''
         }`}
       >
-        {/* Status Indicator */}
-        <div className="absolute top-0 right-0 px-6 py-2 flex items-center gap-2 rounded-bl-2xl bg-white/5 border-l border-b border-white/10">
-          {isCrucial ? (
+        {isCrucial && (
+          <div className="absolute top-0 right-0 px-6 py-2 flex items-center gap-2 rounded-bl-2xl bg-white/5 border-l border-b border-white/10">
             <div className="flex items-center gap-1.5 text-red-500 text-[10px] font-black tracking-widest animate-pulse">
               <AlertTriangle size={12} />
               STATUS: KRISIS NASIONAL
             </div>
-          ) : (
-            <div className="text-president-gold text-[10px] font-black tracking-widest flex items-center gap-1.5">
-              <ShieldCheck size={12} />
-              HARI KE-{day}
-            </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Header Tags */}
         <div className="flex gap-2 mb-8">
