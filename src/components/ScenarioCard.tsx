@@ -48,7 +48,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, day, onCho
 
         {/* Header Tags */}
         <div className="flex gap-2 mb-8">
-          {scenario.context_tags.map((tag) => (
+          {scenario.context_tags?.map((tag) => (
             <span 
               key={tag}
               className="text-[9px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-md bg-white/5 border border-white/5 text-slate-500"
@@ -71,7 +71,7 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, day, onCho
 
         {/* Options Grid (Neural Selectors) */}
         <div className="grid gap-4">
-          {scenario.options.map((option, idx) => (
+          {scenario.options?.map((option, idx) => (
             <motion.button
               key={idx}
               whileHover={!disabled ? { x: 6, backgroundColor: 'rgba(255,255,255,0.05)' } : {}}

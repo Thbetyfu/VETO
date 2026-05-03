@@ -1,0 +1,101 @@
+[
+  {
+    "id": "SCN-15-09",
+    "type": "crucial",
+    "required_archetypes": ["Sang Penjaga Konstitusi"],
+    "title": "⚖️ Ujian Supremasi Hukum",
+    "narrative": "Sebagai pemimpin yang dikenal sangat taat hukum, Anda dihadapkan pada skandal korupsi yang melibatkan lingkaran terdekat Anda. Jika Anda memprosesnya secara hukum, koalisi Anda akan runtuh.",
+    "context_tags": ["Integrity", "Politics"],
+    "options": [
+      {
+        "label": "Tegakkan Hukum (Hancurkan Koalisi)",
+        "impact": { "law": 30, "humanity": 10, "order": -25, "budget": 0 },
+        "legal_basis": "Equality Before the Law (Pasal 27 UUD 1945).",
+        "is_trap": false,
+        "trigger_flags": ["LEGAL_HERO"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Gunakan Pengampunan Rahasia",
+        "impact": { "law": -40, "humanity": -10, "order": 20, "budget": 10 },
+        "legal_basis": "Penyalahgunaan Wewenang (Abuse of Power).",
+        "is_trap": true,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-15-10",
+    "type": "crucial",
+    "required_archetypes": ["Arsitek Stabilitas"],
+    "title": "🛡️ Pengepungan Ketertiban",
+    "narrative": "Ketertiban yang Anda bangun selama ini digoyang oleh aksi demonstrasi anarkis yang didanai asing. Mereka ingin menghentikan proyek strategis nasional Anda.",
+    "context_tags": ["Security", "Stability"],
+    "options": [
+      {
+        "label": "Tindak Tegas (Darurat Sipil)",
+        "impact": { "law": 10, "humanity": -30, "order": 40, "budget": -10 },
+        "legal_basis": "UU No. 23/Prp/1959 tentang Keadaan Bahaya.",
+        "is_trap": false,
+        "trigger_flags": ["IRON_FIST"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Dialog Terbuka (Risiko Chaos)",
+        "impact": { "law": 10, "humanity": 20, "order": -35, "budget": -5 },
+        "legal_basis": "Kedaulatan Rakyat & Hak Berpendapat.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-15-11",
+    "type": "crucial",
+    "required_archetypes": ["Populis Filantropis"],
+    "title": "👥 Jebakan Popularitas",
+    "narrative": "Rakyat meminta Anda menghapus pajak bahan pangan untuk selamanya. Ini akan membuat Anda sangat populer, namun kas negara akan defisit permanen dalam 2 tahun.",
+    "context_tags": ["Fiscal", "Populism"],
+    "options": [
+      {
+        "label": "Hapus Pajak (Senangkan Rakyat)",
+        "impact": { "law": 5, "humanity": 35, "order": 10, "budget": -60 },
+        "legal_basis": "Kebijakan Pro-Rakyat Kecil.",
+        "is_trap": false,
+        "trigger_flags": ["FISCAL_DOOMSDAY"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Tolak (Jaga Keuangan Negara)",
+        "impact": { "law": 5, "humanity": -30, "order": -10, "budget": 40 },
+        "legal_basis": "Prinsip Kesinambungan Fiskal.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-15-12",
+    "type": "normal",
+    "required_archetypes": ["Otoritarian Pragmatis"],
+    "title": "🏗️ Efisiensi Proyek Tanpa Hambatan",
+    "narrative": "Menteri Anda melaporkan bahwa birokrasi hukum memperlambat pembangunan bendungan. Dia menyarankan 'jalur pintas' dengan mengabaikan beberapa aturan tender.",
+    "context_tags": ["Efficiency", "Corruption Risk"],
+    "options": [
+      {
+        "label": "Eksekusi Jalur Pintas",
+        "impact": { "law": -25, "humanity": -5, "order": 15, "budget": 20 },
+        "legal_basis": "Risiko Maladministrasi & KKN.",
+        "is_trap": true,
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Tetap Jalur Lambat (Legal)",
+        "impact": { "law": 20, "humanity": 5, "order": -10, "budget": -10 },
+        "legal_basis": "Integritas Pengadaan Barang & Jasa.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  }
+]

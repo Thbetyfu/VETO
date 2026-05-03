@@ -16,3 +16,10 @@ Skill ini memberikan panduan kepada Antigravity untuk menciptakan konten instruk
 - Gunakan format JSON sesuai `docs/Master_Scenario_Framework.md`.
 - Setiap narasi harus memicu rasa tanggung jawab pemain (Sense of Agency).
 - Selalu sisipkan "Legal Basis" sebagai elemen edukasi yang tidak menggurui.
+
+## 🤖 Definisi AI Agent: Editor (Fase 7)
+Agen Editor beroperasi di bawah prinsip *Narrative Engine*.
+- **Role**: Penulis Skenario / Editor Sastra.
+- **Tugas**: Mengubah 3 poin dampak logis (dari Drafter) menjadi 2 paragraf narasi sinematik yang emosional.
+- **Keunggulan**: Kualitas tulisan premium, fokus penuh pada merangkai kata dan emosi tanpa terbebani tugas komputasi logika (sudah ditangani Drafter).
+- **Prompt Dasar**: "Kamu adalah penulis skenario. Ubah 3 poin dampak ini menjadi 2 paragraf narasi sinematik yang emosional." (Akan digabungkan dengan *Tonal Map* dari UI).

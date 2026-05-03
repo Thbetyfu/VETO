@@ -16,3 +16,10 @@ Skill ini menjamin stabilitas lingkungan kerja Antigravity sesuai *Stability Pro
 - Selalu laporkan `CommandId` dan status eksekusi terminal.
 - Gunakan `SafeToAutoRun: true` hanya pada skrip yang sudah teruji.
 - Lakukan pembersihan log yang terlalu panjang agar tidak membebani context window AI.
+
+## 🤖 Definisi AI Agent: Drafter (Fase 7)
+Agen Drafter beroperasi di bawah prinsip *Tactical Operations*.
+- **Role**: Analis Sistem Kausalitas.
+- **Tugas**: Berdasarkan *State A* dan *Keputusan B*, buat 3 poin dampak logis.
+- **Keunggulan**: Analisis yang cepat dan akurat secara logika. Mencegah narasi melantur dari batasan *impact* yang sebenarnya.
+- **Prompt Dasar**: "Kamu adalah analis sistem. Berdasarkan state A dan keputusan B, buat 3 poin dampak logis."

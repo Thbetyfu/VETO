@@ -1,0 +1,81 @@
+[
+  {
+    "id": "SCN-15-05",
+    "type": "crucial",
+    "required_flags": ["ENVIRONMENTAL_DEBT"],
+    "title": "🔴 Bencana Kabut Asap & Krisis Udara",
+    "narrative": "Akibat percepatan industri dan deregulasi izin yang Anda tandatangani, kebakaran hutan hebat terjadi di wilayah industri baru. Ibu kota diselimuti asap beracun. Rakyat menuntut tanggung jawab Anda atas pengabaian AMDAL.",
+    "context_tags": ["Environmental Crisis", "Public Health"],
+    "options": [
+      {
+        "label": "Hentikan Operasi Pabrik Sementara",
+        "impact": { "law": 15, "humanity": 20, "order": -10, "budget": -35 },
+        "legal_basis": "Asas Tanggung Jawab Mutlak (Strict Liability) UU PPLH.",
+        "is_trap": false,
+        "trigger_flags": ["SOCIAL_RESTITUTION"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Bantah Kaitan Industri (Narasi Alam)",
+        "impact": { "law": -20, "humanity": -25, "order": 10, "budget": 15 },
+        "legal_basis": "Bahaya Misinformasi Pejabat Publik.",
+        "is_trap": true,
+        "trigger_flags": ["PUBLIC_DISTRUST"],
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-15-06",
+    "type": "crucial",
+    "required_flags": ["PRO_ENVIRONMENT"],
+    "forbidden_flags": ["ENVIRONMENTAL_DEBT"],
+    "title": "📉 Defisit Anggaran Hijau",
+    "narrative": "Kebijakan 'Ekonomi Hijau' Anda sangat mahal. Subsidi energi terbarukan membuat kas negara menipis. Bank Dunia menawarkan pinjaman darurat, namun menuntut Anda membuka kembali izin ekspor pasir laut yang kontroversial.",
+    "context_tags": ["Economy", "Geopolitics"],
+    "options": [
+      {
+        "label": "Terima Pinjaman (Ekspor Pasir)",
+        "impact": { "law": -5, "humanity": -10, "order": 15, "budget": 40 },
+        "legal_basis": "PP No. 26/2023 tentang Hasil Sedimentasi di Laut.",
+        "is_trap": false,
+        "trigger_flags": ["FISCAL_SURVIVAL", "ECO_BETRAYAL"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Tolak & Potong Gaji Pejabat",
+        "impact": { "law": 10, "humanity": 30, "order": -15, "budget": 10 },
+        "legal_basis": "Prinsip Efisiensi Anggaran Nasional.",
+        "is_trap": false,
+        "trigger_flags": ["POPULIST_HERO"],
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-15-07",
+    "type": "normal",
+    "required_flags": ["PRO_INDUSTRY"],
+    "title": "🏭 Konflik Agraria: Pabrik vs Petani",
+    "narrative": "Pembangunan jalur kereta logistik untuk industri membelah lahan pertanian warga. Warga melakukan aksi 'semen kaki' di depan istana sebagai protes atas ganti rugi yang tidak layak.",
+    "context_tags": ["Land Conflict", "Human Rights"],
+    "options": [
+      {
+        "label": "Gunakan Jalur Konsinyasi Pengadilan",
+        "impact": { "law": 8, "humanity": -20, "order": 15, "budget": 5 },
+        "legal_basis": "UU No. 2/2012 tentang Pengadaan Tanah.",
+        "is_trap": false,
+        "trigger_flags": ["LEGAL_REPRESSION"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Dialog Langsung & Naikkan Harga",
+        "impact": { "law": 5, "humanity": 20, "order": -5, "budget": -15 },
+        "legal_basis": "Prinsip Kemanusiaan dalam Pembangunan.",
+        "is_trap": false,
+        "trigger_flags": ["AGRARIAN_REFORM_SEED"],
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  }
+]

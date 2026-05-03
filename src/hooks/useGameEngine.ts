@@ -1,9 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { GameState, Scenario, ScenarioOption, Impact } from '../types/scenario';
 import { GameEngineCore } from '../lib/engine/GameEngineCore';
 import { ImpactCalculator } from '../lib/engine/ImpactCalculator';
 import { ScenarioPicker } from '../lib/engine/ScenarioPicker';
 import { StateManager } from '../lib/engine/StateManager';
+import { RealityService } from '../lib/engine/RealityService';
 
 import { IAIService } from '../lib/ai/WebLLMService';
 
@@ -26,10 +27,20 @@ const picker = new ScenarioPicker(); // Untuk initial pick
 export const useGameEngine = (aiService: IAIService) => {
   const [engine] = useState(() => createEngine(aiService));
   const [state, setState] = useState<GameState>(() => {
-    const { scenario } = picker.pick([], 0, []);
+    // Inisialisasi: Hari ke-1, Profile Default
+    const { scenario } = picker.pick([], 0, [], 1, 'Pemimpin Transisional');
     return StateManager.createInitialState(scenario as Scenario, INITIAL_STATS);
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  // Fase 9: Reality Sync
+  useEffect(() => {
+    const syncReality = async () => {
+      const trend = await RealityService.getActiveTrend();
+      setState(prev => ({ ...prev, realityTrend: trend }));
+    };
+    syncReality();
+  }, []);
 
   const makeChoice = useCallback(async (option: ScenarioOption) => {
     setIsLoading(true);
@@ -71,7 +82,9 @@ export const useGameEngine = (aiService: IAIService) => {
         const { scenario } = picker.pick(
           state.history.map(h => h.scenarioId),
           state.normalStreak,
-          state.activeFlags
+          state.activeFlags,
+          state.day,
+          state.profile
         );
         nextScenario = scenario;
       }
@@ -92,7 +105,7 @@ export const useGameEngine = (aiService: IAIService) => {
   }, [state]);
 
   const restartGame = useCallback(() => {
-    const { scenario } = picker.pick([], 0, []);
+    const { scenario } = picker.pick([], 0, [], 1, 'Pemimpin Transisional');
     setState(StateManager.createInitialState(scenario as Scenario, INITIAL_STATS));
   }, []);
 

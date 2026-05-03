@@ -1,0 +1,80 @@
+[
+  {
+    "id": "SCN-15-13",
+    "type": "crucial",
+    "required_flags": ["ENVIRONMENTAL_DEBT", "FISCAL_DOOMSDAY"],
+    "title": "🌋 Krisis Eksistensial Nasional",
+    "narrative": "Akumulasi utang fiskal yang besar dan kerusakan lingkungan yang parah mencapai titik kritis. Terjadi gagal panen nasional di tengah hiperinflasi. Rakyat turun ke jalan menuntut pengunduran diri Anda karena kegagalan sistemik selama 10 tahun.",
+    "context_tags": ["Legacy Crisis", "Systemic Failure"],
+    "options": [
+      {
+        "label": "Gunakan Sisa Dana Darurat (Selamatkan Rakyat)",
+        "impact": { "law": 10, "humanity": 40, "order": -20, "budget": -100 },
+        "legal_basis": "Refleksi Akhir: Kemanusiaan di atas segalanya.",
+        "is_trap": false,
+        "trigger_flags": ["MARTYR_SEED"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Terapkan Jam Malam & Represi (Jaga Takhta)",
+        "impact": { "law": -50, "humanity": -50, "order": 60, "budget": 10 },
+        "legal_basis": "Refleksi Akhir: Kekuasaan di atas segalanya.",
+        "is_trap": false,
+        "trigger_flags": ["TYRANT_SEED"],
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-15-14",
+    "type": "crucial",
+    "required_flags": ["IRON_FIST", "LEGAL_HERO"],
+    "title": "🎭 Paradoks Sang Penjaga",
+    "narrative": "Anda telah menegakkan hukum dengan keras, namun juga menggunakan tangan besi untuk stabilitas. Kini, mahkamah internasional memanggil Anda untuk mempertanyakan batasan antara penegakan hukum dan pelanggaran HAM.",
+    "context_tags": ["International Law", "Human Rights"],
+    "options": [
+      {
+        "label": "Hadir & Bertanggung Jawab",
+        "impact": { "law": 50, "humanity": 20, "order": -30, "budget": -10 },
+        "legal_basis": "Prinsip Pertanggungjawaban Internasional.",
+        "is_trap": false,
+        "trigger_flags": ["VISIONARY_SEED"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Tutup Perbatasan & Isolasi",
+        "impact": { "law": -40, "humanity": -20, "order": 40, "budget": -30 },
+        "legal_basis": "Kedaulatan Mutlak vs Hukum Global.",
+        "is_trap": false,
+        "trigger_flags": ["ISOLATIONIST_SEED"],
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  },
+  {
+    "id": "SCN-15-15",
+    "type": "normal",
+    "required_flags": ["PUBLIC_DISTRUST"],
+    "title": "📜 Surat Wasiat Politik",
+    "narrative": "Di akhir masa jabatan, tingkat kepercayaan publik berada di titik terendah. Anda harus memutuskan apakah akan meminta maaf secara terbuka atau tetap pada pendirian Anda bahwa semua ini demi kebaikan bangsa.",
+    "context_tags": ["Legacy", "Reflections"],
+    "options": [
+      {
+        "label": "Minta Maaf & Akui Kesalahan",
+        "impact": { "law": 10, "humanity": 30, "order": -10, "budget": 0 },
+        "legal_basis": "Etika Publik & Integritas Kepemimpinan.",
+        "is_trap": false,
+        "trigger_flags": ["HUMBLE_LEGACY"],
+        "next_node": "DYNAMIC_NEXT"
+      },
+      {
+        "label": "Pertahankan Kebenaran Anda",
+        "impact": { "law": -5, "humanity": -20, "order": 10, "budget": 0 },
+        "legal_basis": "Konsistensi Kebijakan Nasional.",
+        "is_trap": false,
+        "trigger_flags": ["STUBBORN_LEGACY"],
+        "next_node": "DYNAMIC_NEXT"
+      }
+    ]
+  }
+]

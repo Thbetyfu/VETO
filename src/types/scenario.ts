@@ -41,6 +41,8 @@ export interface Scenario {
   required_flags?: string[];
   /** Flag yang jika aktif akan melarang skenario ini muncul. */
   forbidden_flags?: string[];
+  /** Arketipe kepemimpinan yang dibutuhkan agar skenario ini muncul. */
+  required_archetypes?: string[];
 }
 
 /** State global permainan yang dikelola oleh useGameEngine. */
@@ -56,6 +58,9 @@ export interface GameState {
   normalStreak: number;
   activeFlags: string[];
   profile: string;
+  rollingSummary?: string;
+  realityTrend?: string; // Fase 9: Kata kunci tren dunia nyata
+  ending?: { title: string; narrative: string; type: string };
 }
 
 /** Status lifecycle model WebLLM. */

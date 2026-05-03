@@ -2,14 +2,13 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, ArrowLeft, History, Scale, Users, ShieldAlert, Wallet, Globe, Activity, Award } from 'lucide-react';
 import { PresidentLegacy } from '../lib/gun-bridge';
-import { GunP2PService } from '../lib/p2p/P2PService';
+import { p2pService } from '../lib/p2p/P2PService';
 import { AnalyticsService, GlobalStats } from '../lib/engine/AnalyticsService';
+import { TelemetryDashboard } from './TelemetryDashboard';
 
 interface LegacyGalleryProps {
   onBack: () => void;
 }
-
-const p2pService = new GunP2PService();
 
 /**
  * @component LegacyGallery
@@ -19,6 +18,7 @@ const p2pService = new GunP2PService();
 export const LegacyGallery: React.FC<LegacyGalleryProps> = ({ onBack }) => {
   const [legacies, setLegacies] = useState<PresidentLegacy[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'legacy' | 'telemetry'>('legacy');
 
   useEffect(() => {
     p2pService.getHallOfFame((data) => {
@@ -65,7 +65,21 @@ export const LegacyGallery: React.FC<LegacyGalleryProps> = ({ onBack }) => {
             </div>
           </div>
 
-          <div className="w-24 flex justify-end">
+          <div className="flex items-center gap-4">
+            <div className="flex bg-white/5 p-1 rounded-xl border border-white/10">
+              <button 
+                onClick={() => setViewMode('legacy')}
+                className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${viewMode === 'legacy' ? 'bg-president-gold text-president-dark' : 'text-slate-500 hover:text-white'}`}
+              >
+                Legacies
+              </button>
+              <button 
+                onClick={() => setViewMode('telemetry')}
+                className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${viewMode === 'telemetry' ? 'bg-president-gold text-president-dark' : 'text-slate-500 hover:text-white'}`}
+              >
+                AI Telemetry
+              </button>
+            </div>
             <div className={`flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 ${isLoading ? 'animate-pulse' : ''}`}>
               <div className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-amber-500' : 'bg-emerald-500'}`} />
               <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">
@@ -75,30 +89,41 @@ export const LegacyGallery: React.FC<LegacyGalleryProps> = ({ onBack }) => {
           </div>
         </div>
 
-        {/* Global Analytics Section (Fase 9 Core) */}
-        {!isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
-            <StatCard icon={<Users className="text-president-gold" size={16}/>} label="Total Presidents" value={globalStats.totalPresidents} />
-            <StatCard icon={<Activity className="text-emerald-500" size={16}/>} label="Avg. Stability" value={`${globalStats.avgStability}%`} />
-            <StatCard icon={<Globe className="text-sky-500" size={16}/>} label="Days Governed" value={globalStats.totalDaysGoverned} />
-            <StatCard icon={<Award className="text-purple-500" size={16}/>} label="Top Archetype" value={globalStats.commonArchetype} smallValue />
-          </div>
-        )}
+        <AnimatePresence mode="wait">
+          {viewMode === 'legacy' ? (
+            <motion.div
+              key="legacy-view"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              {/* Global Analytics Section (Fase 9 Core) */}
+              {!isLoading && (
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+                  <StatCard icon={<Users className="text-president-gold" size={16}/>} label="Total Presidents" value={globalStats.totalPresidents} />
+                  <StatCard icon={<Activity className="text-emerald-500" size={16}/>} label="Avg. Stability" value={`${globalStats.avgStability}%`} />
+                  <StatCard icon={<Globe className="text-sky-500" size={16}/>} label="Days Governed" value={globalStats.totalDaysGoverned} />
+                  <StatCard icon={<Award className="text-purple-500" size={16}/>} label="Top Archetype" value={globalStats.commonArchetype} smallValue />
+                </div>
+              )}
 
-        {/* Legacy Feed */}
-        <div className="space-y-4">
-          <AnimatePresence mode="popLayout">
-            {isLoading ? (
-              <LoadingSkeleton />
-            ) : legacies.length === 0 ? (
-              <EmptyState />
-            ) : (
-              legacies.map((legacy, index) => (
-                <LegacyCard key={legacy.id} legacy={legacy} index={index} />
-              ))
-            )}
-          </AnimatePresence>
-        </div>
+              {/* Legacy Feed */}
+              <div className="space-y-4">
+                {isLoading ? (
+                  <LoadingSkeleton />
+                ) : legacies.length === 0 ? (
+                  <EmptyState />
+                ) : (
+                  legacies.map((legacy, index) => (
+                    <LegacyCard key={legacy.id} legacy={legacy} index={index} />
+                  ))
+                )}
+              </div>
+            </motion.div>
+          ) : (
+            <TelemetryDashboard key="telemetry-view" onBack={() => setViewMode('legacy')} />
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );
@@ -159,10 +184,10 @@ const LegacyCard = ({ legacy, index }: { legacy: PresidentLegacy; index: number 
 
     {/* Detailed Stats */}
     <div className="grid grid-cols-4 gap-6 md:border-l border-white/5 md:pl-8 flex-shrink-0">
-      <StatBox label="LAW" value={legacy.finalStats.law} color="text-president-gold" />
-      <StatBox label="HUM" value={legacy.finalStats.humanity} color="text-sky-400" />
-      <StatBox label="ORD" value={legacy.finalStats.order} color="text-red-400" />
-      <StatBox label="BUD" value={legacy.finalStats.budget} color="text-emerald-400" />
+      <StatBox label="LAW" value={legacy.finalStats?.law ?? 0} color="text-president-gold" />
+      <StatBox label="HUM" value={legacy.finalStats?.humanity ?? 0} color="text-sky-400" />
+      <StatBox label="ORD" value={legacy.finalStats?.order ?? 0} color="text-red-400" />
+      <StatBox label="BUD" value={legacy.finalStats?.budget ?? 0} color="text-emerald-400" />
     </div>
   </motion.div>
 );

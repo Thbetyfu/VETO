@@ -1,4 +1,4 @@
-import { Scenario, ScenarioOption } from '../../types/scenario';
+import { Scenario, ScenarioOption, Impact } from '../../types/scenario';
 import { IAIService } from '../ai/WebLLMService';
 
 /**
@@ -13,33 +13,27 @@ export class RoutineGenerator {
   /**
    * Menghasilkan skenario rutin secara prosedural.
    */
-  async generate(day: number, profile: string): Promise<Scenario> {
+  async generate(day: number, profile: string, stats: Impact): Promise<Scenario> {
     const categories = ['Administrasi', 'Kunjungan Kerja', 'Rapat Kabinet', 'Diplomasi Ringan', 'Sosialisasi UU'];
     const category = categories[Math.floor(Math.random() * categories.length)];
 
-    const prompt = `
-      Buat satu skenario tugas rutin Presiden RI pada hari ke-${day}.
-      Kategori: ${category}.
-      Arketipe Presiden saat ini: ${profile}.
-      Format output HARUS JSON mentah:
-      {
-        "title": "Judul Singkat",
-        "description": "Deskripsi singkat tugas harian (max 2 kalimat)",
-        "option_a": "Pilihan Tindakan A",
-        "option_b": "Pilihan Tindakan B"
-      }
-    `;
-
     try {
-      const response = await this.aiService.analyze(prompt);
-      // Membersihkan markdown jika ada
-      const jsonStr = response.replace(/```json|```/g, '').trim();
+      const response = await this.aiService.analyze({
+        stats,
+        profile,
+        isRoutine: true,
+        routineCategory: category,
+        routineDay: day
+      });
+      // response dari routine selalu diset kembalikan raw text (string) di WebLLMService
+      const jsonStr = (typeof response === 'string' ? response : JSON.stringify(response)).replace(/```json|```/g, '').trim();
       const data = JSON.parse(jsonStr);
 
       return {
         id: `routine-${day}-${Date.now()}`,
         title: data.title,
-        description: data.description,
+        narrative: data.description || "Melaksanakan tugas kenegaraan rutin.",
+        context_tags: [category, 'Rutin'],
         type: 'normal',
         options: [
           this.createOption(data.option_a, 'pro-stabilitas'),
@@ -62,8 +56,9 @@ export class RoutineGenerator {
         order: isProStabilitas ? 1 : -1,
         budget: isProStabilitas ? 0 : -2
       },
-      moral_analysis: "Tugas rutin negara.",
-      legal_basis: "UUD 1945 Pasal 4"
+      legal_basis: "UUD 1945 Pasal 4",
+      is_trap: false,
+      next_node: 'root'
     };
   }
 
@@ -71,7 +66,8 @@ export class RoutineGenerator {
     return {
       id: `fallback-${day}`,
       title: `Tugas Rutin: ${category}`,
-      description: `Anda memiliki agenda rutin terkait ${category} di Istana Negara.`,
+      narrative: `Anda memiliki agenda rutin terkait ${category} di Istana Negara.`,
+      context_tags: [category, 'Fallback'],
       type: 'normal',
       options: [
         this.createOption("Laksanakan sesuai prosedur standar.", 'pro-stabilitas'),

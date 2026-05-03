@@ -10,6 +10,7 @@ interface MonthlyReportProps {
   history: Array<{ scenarioId: string; choiceLabel: string; impact: Impact }>;
   onContinue: () => void;
   aiStatus: string;
+  rollingSummary?: string;
 }
 
 /**
@@ -22,7 +23,8 @@ export const MonthlyReport: React.FC<MonthlyReportProps> = ({
   stats, 
   history, 
   onContinue,
-  aiStatus
+  aiStatus,
+  rollingSummary
 }) => {
   const profile = useMemo(() => ProfileService.analyze(stats), [stats]);
   const sacrificeIndex = useMemo(() => ProfileService.calculateSacrificeIndex(history), [history]);
@@ -94,7 +96,7 @@ export const MonthlyReport: React.FC<MonthlyReportProps> = ({
             </span>
           </div>
           <p className="text-sm text-slate-400 italic">
-            "Setiap keputusan Anda telah tercatat dalam memori kolektif bangsa. Tidak ada sejarah yang benar-benar bersih, hanya ada sejarah yang berani."
+            "{rollingSummary || "Setiap keputusan Anda telah tercatat dalam memori kolektif bangsa. Tidak ada sejarah yang benar-benar bersih, hanya ada sejarah yang berani."}"
           </p>
         </div>
 

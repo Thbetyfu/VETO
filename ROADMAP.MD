@@ -112,22 +112,28 @@ Dokumen ini merangkum langkah strategis pengembangan **VETO: President Simulator
     - **Tech**: Implementasi `FlagVault` (Persistent metadata store untuk Butterfly Effect).
     - **Logic**: Penanaman Hidden Flags awal (Ideologi Focus).
     - **Branch**: Cabang Awal (Pro-Industri vs Pro-Lingkungan).
-- [ ] **15.5 - 15.8: Term 1 - The First Harvest**
+- [x] **15.5 - 15.8: Term 1 - The First Harvest** ✅
     - **Tech**: Upgrade `ScenarioPicker` dengan `ConditionalRequirement` (Flag-checking logic).
     - **Logic**: Pemicuan konsekuensi tertunda (Butterfly Effect).
     - **Event**: Krisis Menengah (Economic Collapse vs Social Unrest).
-- [ ] **15.9 - 15.12: Term 2 - The Divergent Path**
+- [x] **15.9 - 15.12: Term 2 - The Divergent Path** ✅
     - **Tech**: Integration `ArchetypeEngine` (Personalized content delivery).
     - **Logic**: Skenario spesifik Arketipe (Patriot/Humanis/Teknokrat).
     - **System**: Sinkronisasi Entropy dengan Narrative Debt.
-- [ ] **15.13 - 15.16: Term 2 - The Legacy Crisis**
+- [x] **15.13 - 15.16: Term 2 - The Legacy Crisis** ✅
     - **Tech**: `ChainReactionProcessor` (Multi-flag dependency triggers).
     - **Logic**: Pemicu krisis akumulatif (Dampak 2 periode jabatan).
     - **Ethic**: Ujian Akhir (Integrity vs Stability).
-- [ ] **15.17 - 15.20: The Grand Finale**
+- [x] **15.17 - 15.20: The Grand Finale** ✅
     - **Tech**: `EndingOrchestrator` (Final state evaluation logic).
     - **Logic**: Kompilasi Legacy Report berdasarkan 720 hari keputusan.
     - **Ending**: Implementasi 5 Unique Outcomes (Visionary, Tyrant, Martyr, etc).
+
+### 📡 Milestone 6: Resilience & Scalability (VETO 3.0)
+- [x] **Fase 16: P2P Network Resilience & Offline-First** ✅
+    - **Tech**: GunDB Advanced Relay & SEA (Security, Encryption, Authorization).
+    - **Logic**: Sinkronisasi state antar-siswa tanpa server (Mesh Network).
+    - **System**: Robust conflict resolution & state re-hydration.
 
 ---
 

@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, ThumbsUp, Minus, ThumbsDown, Loader2 } from 'lucide-react';
+import { Brain, ThumbsUp, Minus, ThumbsDown, Loader2, Flag } from 'lucide-react';
 import type { AIFeedbackData, AIStatus } from '../types/scenario';
+import { p2pService } from '../lib/p2p/P2PService';
 
 interface AIFeedbackProps {
   feedback: AIFeedbackData | null;
@@ -18,6 +20,26 @@ interface AIFeedbackProps {
  * 4. ready + feedback → panel analisis dengan tone berwarna
  */
 export const AIFeedback = ({ feedback, status, loadProgress }: AIFeedbackProps) => {
+  const [hasRated, setHasRated] = useState(false);
+
+  const handleRate = (isPositive: boolean) => {
+    if (hasRated || !feedback) return;
+    
+    setHasRated(true);
+
+    if (!isPositive) {
+      // Simpan telemetri ke GunDB jika feedback negatif (Fase 10)
+      p2pService.saveAITelemetry({
+        feedback: feedback.message,
+        profile: feedback.moralProfile,
+        tone: feedback.tone,
+        rating: 'negative',
+        timestamp: Date.now()
+      });
+      console.log("[AIFeedback] Telemetry tersimpan di GunDB.");
+    }
+  };
+
   if (status === 'idle' || status === 'error') return null;
 
   return (
@@ -71,18 +93,43 @@ export const AIFeedback = ({ feedback, status, loadProgress }: AIFeedbackProps) 
           exit={{ opacity: 0, y: -8 }}
           className={`mt-4 glass-card p-5 border-l-4 ${toneStyle[feedback.tone].border}`}
         >
-          <div className="flex items-center gap-2 mb-3">
-            <div className={`p-1.5 rounded-lg ${toneStyle[feedback.tone].bg}`}>
-              {toneStyle[feedback.tone].icon}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className={`p-1.5 rounded-lg ${toneStyle[feedback.tone].bg}`}>
+                {toneStyle[feedback.tone].icon}
+              </div>
+              <div>
+                <p className={`text-[10px] font-bold uppercase tracking-widest ${toneStyle[feedback.tone].text}`}>
+                  Suara Rakyat
+                </p>
+                <p className="text-[10px] text-slate-500">
+                  Profil Kepemimpinan: <span className="text-slate-300 font-semibold">{feedback.moralProfile}</span>
+                </p>
+              </div>
             </div>
-            <div>
-              <p className={`text-[10px] font-bold uppercase tracking-widest ${toneStyle[feedback.tone].text}`}>
-                Suara Rakyat
-              </p>
-              <p className="text-[10px] text-slate-500">
-                Profil Kepemimpinan: <span className="text-slate-300 font-semibold">{feedback.moralProfile}</span>
-              </p>
-            </div>
+            
+            {/* Telemetry UI (Fase 10) */}
+            {!hasRated && (
+              <div className="flex items-center gap-1 opacity-60 hover:opacity-100 transition-opacity">
+                <button 
+                  onClick={() => handleRate(true)}
+                  className="p-1 hover:bg-white/10 rounded-md transition-colors"
+                  title="Masuk akal"
+                >
+                  <ThumbsUp size={14} className="text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => handleRate(false)}
+                  className="p-1 hover:bg-white/10 rounded-md transition-colors"
+                  title="Kalimat kaku / Tidak masuk akal"
+                >
+                  <Flag size={14} className="text-slate-400" />
+                </button>
+              </div>
+            )}
+            {hasRated && (
+              <span className="text-[10px] text-slate-500 italic">Terima kasih atas masukannya.</span>
+            )}
           </div>
           <p className="text-sm text-slate-300 leading-relaxed italic">"{feedback.message}"</p>
         </motion.div>

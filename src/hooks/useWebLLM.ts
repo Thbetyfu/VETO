@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useMemo } from 'react';
 import type { AIStatus, AIFeedbackData, ScenarioOption, Impact } from '../types/scenario';
 import { WebLLMService, IAIService } from '../lib/ai/WebLLMService';
+import { AgentOrchestrator } from '../lib/ai/AgentOrchestrator';
 
 /**
  * @hook useWebLLM
@@ -12,8 +13,9 @@ export const useWebLLM = () => {
   const [loadProgress, setLoadProgress] = useState(0);
   const [feedback, setFeedback] = useState<AIFeedbackData | null>(null);
   
-  // Singleton instance
+  // Singleton instances
   const aiService = useMemo(() => new WebLLMService(), []);
+  const orchestrator = useMemo(() => new AgentOrchestrator(aiService), [aiService]);
 
   const initModel = useCallback(async () => {
     // Security/Capability Check
@@ -37,25 +39,35 @@ export const useWebLLM = () => {
 
   const generateFeedback = useCallback(async (
     lastChoice: string, 
-    // ... params kept for compatibility if needed elsewhere
+    context: { stats: Impact, profile: string, toneType?: string, realityTrend?: string }
   ) => {
     if (status !== 'ready') return;
 
     setStatus('generating');
     try {
-      const prompt = `Berikan komentar singkat rakyat terhadap keputusan Presiden: "${lastChoice}". Format: Satu kalimat singkat.`;
-      const result = await aiService.analyze(prompt);
-      setFeedback({
-        tone: 'neutral',
-        message: result,
-        moralProfile: 'Analisis Real-time'
+      const result = await orchestrator.generateMultiAgentNarrative({
+        stats: context.stats,
+        profile: context.profile,
+        recentEvent: lastChoice,
+        toneType: context.toneType,
+        realityKeyword: context.realityTrend
       });
+      
+      setFeedback({
+        tone: 'neutral', // Nanti bisa di-improve berbasis Drafter output
+        message: result.narasi_final,
+        moralProfile: context.profile
+      });
+      
+      if (result.analisis_situasi) {
+        console.log("[VETO Multi-Agent Analysis]", result.analisis_situasi);
+      }
     } catch (err) {
       console.error('Feedback error:', err);
     } finally {
       setStatus('ready');
     }
-  }, [status, aiService]);
+  }, [status, orchestrator]);
 
   return { 
     status, 

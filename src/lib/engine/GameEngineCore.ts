@@ -5,6 +5,7 @@ import { StateManager } from './StateManager';
 import { TermManager } from './TermManager';
 import { RoutineGenerator } from './RoutineGenerator';
 import { IAIService } from '../ai/WebLLMService';
+import { EndingManager } from './EndingManager';
 
 /**
  * @class GameEngineCore
@@ -31,7 +32,7 @@ export class GameEngineCore {
         ...prevState,
         isGameOver: true,
         gameOverReason: `KEPUTUSAN FATAL: ${option.label}. ${option.legal_basis || ''}`,
-        lastChoice: option.label,
+        lastChoice: option,
       };
     }
 
@@ -68,6 +69,17 @@ export class GameEngineCore {
 
     // 7. Scenario Pipeline (Fase 13: Hybrid Narrative)
     const isReportDue = combinedState.day % 10 === 0;
+    
+    // Fase 6: Memori & Ringkasan Konteks (Rolling Context)
+    if (isReportDue && combinedState.history.length >= 3) {
+      try {
+        const pastEvents = combinedState.history.slice(-3).map(h => h.choiceLabel);
+        combinedState.rollingSummary = await this.aiService.generateRollingSummary(pastEvents);
+      } catch (e) {
+        console.warn("[GameEngineCore] Gagal menghasilkan rolling summary", e);
+      }
+    }
+
     if (!isReportDue && !combinedState.isGameOver) {
       // Logic: 30% Crisis/Hand-crafted, 70% Routine/Procedural
       const shouldBeRoutine = combinedState.day % 3 !== 0; // Setiap hari ke-3 adalah hari 'Penting'
@@ -79,17 +91,36 @@ export class GameEngineCore {
           combinedState.history.map(h => h.scenarioId),
           combinedState.normalStreak,
           combinedState.activeFlags,
-          combinedState.day
+          combinedState.day,
+          combinedState.profile
         );
         nextScenario = scenario;
       }
 
-      // Jika tidak ada skenario penting atau memang hari rutin, generate lewat AI
       if (!nextScenario) {
-        nextScenario = await this.routineGenerator.generate(combinedState.day, combinedState.profile);
+        nextScenario = await this.routineGenerator.generate(combinedState.day, combinedState.profile, combinedState.stats);
       }
       
-      combinedState.currentScenario = nextScenario;
+      // 3. Update State (Fase 15.17: Check for Ending)
+      const isGameOver = combinedState.day >= 720;
+      let ending = undefined;
+      
+      if (isGameOver) {
+        const evaluation = EndingManager.evaluate(combinedState);
+        ending = {
+          title: evaluation.title,
+          narrative: evaluation.narrative,
+          type: evaluation.type
+        };
+      }
+
+      const finalState: GameState = {
+        ...combinedState,
+        currentScenario: isGameOver ? null : nextScenario,
+        ending: ending
+      };
+
+      return finalState;
     }
 
     return combinedState;

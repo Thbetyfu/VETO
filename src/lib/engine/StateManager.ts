@@ -25,12 +25,12 @@ export class StateManager {
   static updateTurn(prev: GameState, nextStats: Impact, option: ScenarioOption): Partial<GameState> {
     const nextDay = prev.day + 1;
     const nextHistory = [...prev.history, { 
-      scenarioId: prev.currentScenario.id, 
+      scenarioId: prev.currentScenario?.id || 'unknown', 
       choiceLabel: option.label,
       impact: option.impact 
     }];
     
-    const isNormal = prev.currentScenario.type === 'normal';
+    const isNormal = prev.currentScenario?.type === 'normal';
     const nextStreak = isNormal ? prev.normalStreak + 1 : 0;
     
     // Flag Management (Neural Weave)
@@ -49,7 +49,7 @@ export class StateManager {
       history: nextHistory,
       normalStreak: nextStreak,
       activeFlags: nextFlags,
-      lastChoice: option.label
+      lastChoice: option
     };
   }
 }

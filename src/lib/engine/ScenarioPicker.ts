@@ -1,13 +1,16 @@
 import INITIAL_BATCH from '../../../scenarios/initial_batch.json';
 import FASE_15_1 from '../../../scenarios/fase_15_1.json';
+import FASE_15_5 from '../../../scenarios/fase_15_5.json';
+import FASE_15_9 from '../../../scenarios/fase_15_9.json';
+import FASE_15_13 from '../../../scenarios/fase_15_13.json';
 import { Scenario } from '../../types/scenario';
 import { IScenarioPicker } from './types';
 
 // Gabungkan semua batch skenario
-const SCENARIOS = [...INITIAL_BATCH, ...FASE_15_1] as Scenario[];
+const SCENARIOS = [...INITIAL_BATCH, ...FASE_15_1, ...FASE_15_5, ...FASE_15_9, ...FASE_15_13] as Scenario[];
 
 export class ScenarioPicker implements IScenarioPicker {
-  pick(historyIds: string[], streak: number, activeFlags: string[], day: number): { scenario: Scenario | null; isPoolEmpty: boolean } {
+  pick(historyIds: string[], streak: number, activeFlags: string[], day: number, profile: string): { scenario: Scenario | null; isPoolEmpty: boolean } {
     // 0. Hardcoded Start (Fase 15.1: The Inauguration)
     if (day === 1) {
       const startScenario = SCENARIOS.find(s => s.id === 'SCN-15-01');
@@ -27,6 +30,9 @@ export class ScenarioPicker implements IScenarioPicker {
       // 3. Filter Flag (Neural Weave Logic)
       if (s.required_flags && !s.required_flags.every(f => activeFlags.includes(f))) return false;
       if (s.forbidden_flags && s.forbidden_flags.some(f => activeFlags.includes(f))) return false;
+
+      // 4. Filter Arketipe (The Divergent Path)
+      if (s.required_archetypes && !s.required_archetypes.includes(profile)) return false;
       
       return true;
     });

@@ -6,12 +6,14 @@ import { useWebLLM } from './hooks/useWebLLM';
 import { ScenarioCard } from './components/ScenarioCard';
 import { StatItem } from './components/StatItem';
 import { GameOverScreen } from './components/GameOverScreen';
+import { EndingScreen } from './components/EndingScreen';
 import { AIFeedback } from './components/AIFeedback';
 import { Prologue } from './components/Prologue';
 import { MonthlyReport } from './components/MonthlyReport';
 import { CalendarService } from './lib/engine/CalendarService';
 import { ElectionNight } from './components/ElectionNight';
-import { saveLegacy } from './lib/gun-bridge';
+import { LegacyGallery } from './components/LegacyGallery';
+import { p2pService } from './lib/p2p/P2PService';
 import type { ScenarioOption } from './types/scenario';
 
 /**
@@ -50,8 +52,8 @@ function App() {
   // === Hall of Fame Integration ===
   useEffect(() => {
     if (isGameOver) {
-      saveLegacy({
-        id: `legacy-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      p2pService.saveLegacy({
+        id: `legacy-${Date.now()}`, // P2PService will override this with secureId
         playerName: playerName,
         day: day,
         reason: gameOverReason,
@@ -79,7 +81,13 @@ function App() {
     
     // Jalankan AI analysis setelah state update (tidak blocking UX)
     if (aiStatus === 'ready') {
-      await generateFeedback(option.label);
+      const toneType = currentScenario?.type === 'crucial' ? 'CRISIS' : 'NORMAL';
+      await generateFeedback(option.label, { 
+        stats, 
+        profile: state.profile, 
+        toneType,
+        realityTrend: state.realityTrend
+      });
     }
   };
 
@@ -123,6 +131,7 @@ function App() {
             history={history}
             onContinue={closeReport}
             aiStatus={aiStatus}
+            rollingSummary={state.rollingSummary}
           />
         )}
       </AnimatePresence>
@@ -196,12 +205,21 @@ function App() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ type: 'spring', damping: 20 }}
             >
-              <GameOverScreen 
-                reason={gameOverReason} 
-                day={day} 
-                onRestart={restartGame} 
-                onViewGallery={() => setShowGallery(true)}
-              />
+              {state.ending ? (
+                <EndingScreen 
+                  ending={state.ending as any}
+                  playerName={playerName}
+                  onRestart={restartGame}
+                  onViewGallery={() => setShowGallery(true)}
+                />
+              ) : (
+                <GameOverScreen 
+                  reason={gameOverReason} 
+                  day={day} 
+                  onRestart={restartGame} 
+                  onViewGallery={() => setShowGallery(true)}
+                />
+              )}
             </motion.div>
           ) : (
             <motion.div 
