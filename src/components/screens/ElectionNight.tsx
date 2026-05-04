@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Vote, TrendingUp, Users, Award } from 'lucide-react';
-import { Impact } from '../types/scenario';
+import { Impact } from '../../types/scenario';
 
 interface ElectionNightProps {
   stats: Impact;

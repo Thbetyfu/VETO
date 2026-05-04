@@ -99,13 +99,13 @@ Dokumen ini merangkum langkah strategis pengembangan **VETO: President Simulator
 
 ### 🧠 Fase 13: AI Routine Generator (Anti-Repetisi) ✅
 - [x] **Procedural Narrative**: Integrasi WebLLM untuk men-generate "Kegiatan Biasa" secara dinamis.
-- [ ] **Context-Aware Dialogue**: AI mengingat sejarah keputusan untuk dialog rutin.
-- [ ] **Micro-Learning Injections**: Edukasi tata negara pada skenario rutin.
+- [x] **Context-Aware Dialogue**: AI mengingat sejarah keputusan untuk dialog rutin.
+- [x] **Micro-Learning Injections**: Edukasi tata negara pada skenario rutin.
 
 ### 📊 Fase 14: UI/UX "National Odyssey" ✅
 - [x] **Calendar System**: Visualisasi Tahun/Bulan/Hari untuk rentang 10 tahun simulasi.
 - [x] **Election Night Screen**: Cinematic feedback untuk hasil Pemilu tengah periode.
-- [ ] **Interactive Timeline**: Grafik histori 720 hari yang dapat dieksplorasi.
+- [x] **Interactive Timeline**: Grafik histori 720 hari yang dapat dieksplorasi.
 
 ### 🎭 Fase 15: Narrative Odyssey (The Neural Weave - 20 Sub-Phases)
 - [x] **15.1 - 15.4: Term 1 - The Seeds of Governance** ✅

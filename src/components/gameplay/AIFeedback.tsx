@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, ThumbsUp, Minus, ThumbsDown, Loader2, Flag, AlertTriangle, Zap } from 'lucide-react';
-import type { AIFeedbackData, AIStatus } from '../types/scenario';
-import { p2pService } from '../lib/p2p/P2PService';
+import type { AIFeedbackData, AIStatus } from '../../types/scenario';
+import { p2pService } from '../../lib/p2p/P2PService';
 
 interface AIFeedbackProps {
   feedback: AIFeedbackData | null;

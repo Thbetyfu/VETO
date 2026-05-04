@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Gavel, AlertTriangle, ShieldCheck } from 'lucide-react';
-import type { Scenario, ScenarioOption } from '../types/scenario';
+import type { Scenario, ScenarioOption } from '../../types/scenario';
 
 interface ScenarioCardProps {
   scenario: Scenario;

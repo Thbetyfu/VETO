@@ -1,4 +1,4 @@
-import { GameState, ScenarioOption, Impact } from '../../types/scenario';
+import { GameState, ScenarioOption, Impact } from '../../../types/scenario';
 
 /**
  * @class StateManager
@@ -16,6 +16,7 @@ export class StateManager {
       isReportOpen: false,
       gameOverReason: '',
       history: [],
+      statsHistory: [{ day: 1, ...initialStats }],
       normalStreak: 0,
       activeFlags: [],
       profile: 'Pragmatis Moderat'
@@ -47,6 +48,7 @@ export class StateManager {
       stats: nextStats,
       day: nextDay,
       history: nextHistory,
+      statsHistory: [...(prev.statsHistory || []), { day: nextDay, ...nextStats }],
       normalStreak: nextStreak,
       activeFlags: nextFlags,
       lastChoice: option

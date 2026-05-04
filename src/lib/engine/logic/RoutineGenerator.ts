@@ -1,5 +1,5 @@
-import { Scenario, ScenarioOption, Impact } from '../../types/scenario';
-import { IAIService } from '../ai/WebLLMService';
+import { Scenario, ScenarioOption, Impact } from '../../../types/scenario';
+import { IAIService } from '../../ai/WebLLMService';
 
 /**
  * @class RoutineGenerator
@@ -13,7 +13,7 @@ export class RoutineGenerator {
   /**
    * Menghasilkan skenario rutin secara prosedural.
    */
-  async generate(day: number, profile: string, stats: Impact): Promise<Scenario> {
+  async generate(day: number, profile: string, stats: Impact, recentHistory?: string[]): Promise<Scenario> {
     const categories = [
       'Intrik Internal', 
       'Skandal Media', 
@@ -31,7 +31,8 @@ export class RoutineGenerator {
         profile,
         isRoutine: true,
         routineCategory: category,
-        routineDay: day
+        routineDay: day,
+        recentHistory
       });
       
       const jsonStr = (typeof response === 'string' ? response : JSON.stringify(response)).replace(/```json|```/g, '').trim();

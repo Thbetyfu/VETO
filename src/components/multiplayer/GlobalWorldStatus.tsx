@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Globe, Users, Activity } from 'lucide-react';
-import { p2pService } from '../lib/p2p/P2PService';
-import { Impact } from '../types/scenario';
+import { Globe, Users } from 'lucide-react';
+import { p2pService } from '../../lib/p2p/P2PService';
+import { Impact } from '../../types/scenario';
+
+interface GlobalWorldStatusProps {
+  /** Jumlah pemain aktif di room saat ini. Jika tidak multiplayer, defaultnya 1. */
+  activePeers?: number;
+}
 
 /**
  * @component GlobalWorldStatus
- * @description Fase 1: Menampilkan Indikator Dunia Global (Shared P2P State).
- * Memberikan rasa keterhubungan antar pemain melalui metrik agregat.
+ * @description Menampilkan Indikator Dunia Global (Shared P2P State).
+ * Counter "Presiden Online" kini membaca langsung dari roomData (LocalP2PTransport)
+ * yang diteruskan via prop, menggantikan GunDB yang tidak bisa diandalkan.
  */
-export const GlobalWorldStatus: React.FC = () => {
+export const GlobalWorldStatus: React.FC<GlobalWorldStatusProps> = ({ activePeers = 1 }) => {
   const [globalMetrics, setGlobalMetrics] = useState<Impact & { activePeers: number } | null>(null);
 
   useEffect(() => {
-    // Listen ke perubahan World State di GunDB
+    // Tetap listen ke world state GunDB untuk metrik agregat global (opsional)
     p2pService.getWorldState((data) => {
       setGlobalMetrics(data);
     });
@@ -50,17 +56,29 @@ export const GlobalWorldStatus: React.FC = () => {
 
       <div className="h-8 w-px bg-white/10" />
 
+      {/* Counter Presiden Online — sumber data dari roomData via prop */}
       <div className="flex items-center gap-2">
         <div className="flex -space-x-2">
-          {[...Array(Math.min(globalMetrics?.activePeers || 1, 3))].map((_, i) => (
-            <div key={i} className="w-6 h-6 rounded-full bg-slate-800 border-2 border-slate-900 flex items-center justify-center">
+          {[...Array(Math.min(activePeers, 3))].map((_, i) => (
+            <motion.div
+              key={i}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: i * 0.1 }}
+              className="w-6 h-6 rounded-full bg-slate-800 border-2 border-slate-900 flex items-center justify-center"
+            >
               <Users size={10} className="text-slate-400" />
-            </div>
+            </motion.div>
           ))}
         </div>
-        <span className="text-[10px] font-bold text-slate-400">
-          {globalMetrics?.activePeers || 1} PRESIDEN ONLINE
-        </span>
+        <motion.span
+          key={activePeers}
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-[10px] font-bold text-slate-400"
+        >
+          {activePeers} PRESIDEN ONLINE
+        </motion.span>
       </div>
     </motion.div>
   );

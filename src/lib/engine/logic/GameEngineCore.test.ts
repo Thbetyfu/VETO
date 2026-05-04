@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
-import { GameEngineCore } from './GameEngineCore';
+import { GameEngineCore } from '../core/GameEngineCore';
 import { ImpactCalculator } from './ImpactCalculator';
 import { ScenarioPicker } from './ScenarioPicker';
-import { IAIService } from '../ai/WebLLMService';
+import { IAIService } from '../../ai/WebLLMService';
 
 const mockAiService: IAIService = {
   init: vi.fn(),

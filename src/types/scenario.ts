@@ -10,6 +10,7 @@ export interface Impact {
   humanity: number;
   order: number;
   budget: number;
+  // Dynamic fields for diplomatic pressure can be added here if needed
 }
 
 /** Tipe skenario — menentukan magnitude impact & probabilitas kemunculan.
@@ -20,6 +21,7 @@ export type ScenarioType = 'normal' | 'crucial';
 
 /** Satu opsi pilihan yang tersedia bagi pemain. */
 export interface ScenarioOption {
+  id?: string; // Unique ID for sync
   label: string;
   impact: Impact;
   legal_basis: string;
@@ -27,6 +29,8 @@ export interface ScenarioOption {
   next_node: string;
   /** Flag yang akan diaktifkan di global state jika opsi ini dipilih. */
   trigger_flags?: string[];
+  /** Dampak ke presiden lain jika opsi ini dipilih (Diplomacy). */
+  diplomatic_to_others?: Partial<Impact>;
 }
 
 /** Satu kartu skenario lengkap. */
@@ -43,6 +47,8 @@ export interface Scenario {
   forbidden_flags?: string[];
   /** Arketipe kepemimpinan yang dibutuhkan agar skenario ini muncul. */
   required_archetypes?: string[];
+  /** Flag multiplayer: Jika true, skenario ini memiliki efek diplomatik lintas pemain. */
+  is_diplomatic?: boolean;
 }
 
 /** State global permainan yang dikelola oleh useGameEngine. */
@@ -61,6 +67,7 @@ export interface GameState {
   rollingSummary?: string;
   realityTrend?: string; // Fase 9: Kata kunci tren dunia nyata
   ending?: { title: string; narrative: string; type: string };
+  statsHistory: Array<{ day: number } & Impact>;
 }
 
 /** Status lifecycle model WebLLM. */

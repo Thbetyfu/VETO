@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { ImpactCalculator } from './ImpactCalculator';
-import { Impact } from '../../types/scenario';
+import { Impact } from '../../../types/scenario';
 
 describe('ImpactCalculator (Neuron-Based)', () => {
   const calculator = new ImpactCalculator();

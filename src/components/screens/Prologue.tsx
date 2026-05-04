@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, BrainCircuit, ArrowRight, BookOpen } from 'lucide-react';
-import { PlayerService } from '../lib/player/PlayerService';
+import { PlayerService } from '../../lib/player/PlayerService';
 
 interface PrologueProps {
   onStart: (name: string, mode: 'single' | 'multi', roomOptions?: { action: 'create' | 'join', roomId?: string }) => void;

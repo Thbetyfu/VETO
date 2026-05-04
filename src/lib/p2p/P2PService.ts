@@ -1,6 +1,7 @@
 import Gun from 'gun';
 import 'gun/sea';
 import { PresidentLegacy } from '../gun-bridge';
+import * as LocalTransport from './LocalP2PTransport';
 
 /**
  * @interface IP2PService
@@ -235,81 +236,39 @@ export class GunP2PService implements IP2PService {
   }
 
   /**
-   * Diplomacy Mode: Membuat Room baru dengan ID unik.
+   * Diplomacy Mode: Membuat Room baru menggunakan LocalP2PTransport
+   * (fallback dari GunDB yang tidak dapat diandalkan saat offline).
    */
   createRoom(hostName: string, callback: (roomId: string) => void): void {
-    const roomId = Math.random().toString(36).slice(2, 7).toUpperCase();
-    const roomRef = this.db.get(`veto/rooms/${roomId}`);
-    
-    roomRef.put({
-      status: 'waiting',
-      currentScenarioId: 'SCN-15-01',
-      createdAt: Date.now()
-    });
-
-    // Tambahkan host sebagai pemain pertama
-    roomRef.get('players').get(hostName).put({ joinedAt: Date.now() });
-    
-    callback(roomId);
+    LocalTransport.createRoom(hostName, callback);
   }
 
   /**
    * Diplomacy Mode: Bergabung ke Room yang sudah ada.
    */
   joinRoom(roomId: string, playerName: string, onUpdate: (roomData: any) => void): void {
-    const roomRef = this.db.get(`veto/rooms/${roomId}`);
-    
-    // Tambahkan pemain ke daftar
-    roomRef.get('players').get(playerName).put({ joinedAt: Date.now() });
-
-    // Listen ke seluruh perubahan di room
-    roomRef.on((data) => {
-      // Ambil data pemain secara detail
-      roomRef.get('players').once((players) => {
-        // Ambil data respons secara detail
-        roomRef.get('responses').once((responses) => {
-          onUpdate({
-            ...data,
-            players: players || {},
-            responses: responses || {}
-          });
-        });
-      });
-    });
+    LocalTransport.joinRoom(roomId, playerName, onUpdate);
   }
 
   /**
    * Diplomacy Mode: Submit pilihan ke kolektif.
    */
   submitRoomChoice(roomId: string, playerName: string, scenarioId: string, choiceId: string): void {
-    this.db.get(`veto/rooms/${roomId}/responses`).get(playerName).put({
-      scenarioId,
-      choiceId,
-      timestamp: Date.now()
-    });
+    LocalTransport.submitRoomChoice(roomId, playerName, scenarioId, choiceId);
   }
 
   /**
    * Diplomacy Mode: Lanjut ke skenario berikutnya (Admin/Host trigger).
    */
   advanceRoom(roomId: string, nextScenarioId: string): void {
-    const roomRef = this.db.get(`veto/rooms/${roomId}`);
-    roomRef.put({ 
-      currentScenarioId: nextScenarioId,
-      status: 'playing' 
-    });
-    // Reset respons untuk turn berikutnya
-    roomRef.get('responses').put(null);
+    LocalTransport.advanceRoom(roomId, nextScenarioId);
   }
 
   /**
    * Diplomacy Mode: Host memulai permainan secara resmi.
    */
   startGame(roomId: string): void {
-    this.db.get(`veto/rooms/${roomId}`).put({
-      status: 'playing',
-      startedAt: Date.now()
-    });
+    LocalTransport.startGame(roomId);
   }
 }
 

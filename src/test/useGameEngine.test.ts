@@ -13,7 +13,7 @@ const mockAiService: IAIService = {
 
 describe('useGameEngine White-Box Testing', () => {
   it('harus menginisialisasi state dengan benar', () => {
-    const { result } = renderHook(() => useGameEngine(mockAiService));
+    const { result } = renderHook(() => useGameEngine(mockAiService, 'Test Player'));
     
     expect(result.current.state.day).toBe(1);
     expect(result.current.state.stats.law).toBe(75);
@@ -21,7 +21,7 @@ describe('useGameEngine White-Box Testing', () => {
   });
 
   it('harus memperbarui statistik saat pilihan diambil', async () => {
-    const { result } = renderHook(() => useGameEngine(mockAiService));
+    const { result } = renderHook(() => useGameEngine(mockAiService, 'Test Player'));
     
     const initialLaw = result.current.state.stats.law;
     const option = {
@@ -41,7 +41,7 @@ describe('useGameEngine White-Box Testing', () => {
   });
 
   it('harus memicu Game Over jika statistik mencapai 0', async () => {
-    const { result } = renderHook(() => useGameEngine(mockAiService));
+    const { result } = renderHook(() => useGameEngine(mockAiService, 'Test Player'));
     
     const lethalOption = {
       label: 'Fatal Decision',
@@ -60,7 +60,7 @@ describe('useGameEngine White-Box Testing', () => {
   });
 
   it('harus mereset state saat restartGame dipanggil', async () => {
-    const { result } = renderHook(() => useGameEngine(mockAiService));
+    const { result } = renderHook(() => useGameEngine(mockAiService, 'Test Player'));
     
     await act(async () => {
       await result.current.makeChoice({

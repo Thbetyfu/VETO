@@ -1,4 +1,4 @@
-import { Impact, GameState } from '../../types/scenario';
+import { Impact, GameState } from '../../../types/scenario';
 
 export interface EndingResult {
   type: 'VISIONARY' | 'TYRANT' | 'MARTYR' | 'FALLEN' | 'PRESERVER';

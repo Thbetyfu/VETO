@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { History, TrendingDown, TrendingUp, ShieldAlert, Award } from 'lucide-react';
-import { Impact } from '../types/scenario';
-import { ProfileService } from '../lib/engine/ProfileService';
+import { Impact } from '../../types/scenario';
+import { ProfileService } from '../../lib/engine/services/ProfileService';
 
 interface MonthlyReportProps {
   day: number;

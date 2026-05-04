@@ -1,4 +1,4 @@
-import { Impact } from '../../types/scenario';
+import { Impact } from '../../../types/scenario';
 
 /**
  * @class StateTranslator

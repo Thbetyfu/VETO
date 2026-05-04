@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { p2pService } from '../lib/p2p/P2PService';
+import { p2pService } from '../../lib/p2p/P2PService';
 import { BarChart3, MessageSquare, ThumbsUp, ThumbsDown, ShieldCheck, Cpu, Database, ArrowLeft } from 'lucide-react';
 
 interface TelemetryRecord {

@@ -1,11 +1,11 @@
-import { GameState, ScenarioOption } from '../../types/scenario';
+import { GameState, ScenarioOption } from '../../../types/scenario';
 import { IImpactCalculator, IScenarioPicker } from './types';
-import { ProfileService } from './ProfileService';
+import { ProfileService } from '../services/ProfileService';
 import { StateManager } from './StateManager';
-import { TermManager } from './TermManager';
-import { RoutineGenerator } from './RoutineGenerator';
-import { IAIService } from '../ai/WebLLMService';
-import { EndingManager } from './EndingManager';
+import { TermManager } from '../services/TermManager';
+import { RoutineGenerator } from '../logic/RoutineGenerator';
+import { IAIService } from '../../ai/WebLLMService';
+import { EndingManager } from '../services/EndingManager';
 
 /**
  * @class GameEngineCore
@@ -18,9 +18,9 @@ export class GameEngineCore {
   private routineGenerator: RoutineGenerator;
 
   constructor(
-    private calculator: IImpactCalculator,
-    private picker: IScenarioPicker,
-    private aiService: IAIService
+    public calculator: IImpactCalculator,
+    public picker: IScenarioPicker,
+    public aiService: IAIService
   ) {
     this.routineGenerator = new RoutineGenerator(aiService);
   }
@@ -73,7 +73,7 @@ export class GameEngineCore {
     // Fase 6: Memori & Ringkasan Konteks (Rolling Context)
     if (isReportDue && combinedState.history.length >= 3) {
       try {
-        const pastEvents = combinedState.history.slice(-3).map(h => h.choiceLabel);
+        const pastEvents = combinedState.history.slice(-3).map((h: any) => h.choiceLabel);
         combinedState.rollingSummary = await this.aiService.generateRollingSummary(pastEvents);
       } catch (e) {
         console.warn("[GameEngineCore] Gagal menghasilkan rolling summary", e);
@@ -87,8 +87,8 @@ export class GameEngineCore {
       let nextScenario;
       
       if (!shouldBeRoutine) {
-        const { scenario } = this.picker.pick(
-          combinedState.history.map(h => h.scenarioId),
+        const { scenario } = await this.picker.pick(
+          combinedState.history.map((h: any) => h.scenarioId),
           combinedState.normalStreak,
           combinedState.activeFlags,
           combinedState.day,
@@ -98,7 +98,8 @@ export class GameEngineCore {
       }
 
       if (!nextScenario) {
-        nextScenario = await this.routineGenerator.generate(combinedState.day, combinedState.profile, combinedState.stats);
+        const recentHistory = combinedState.history.slice(-3).map((h: any) => h.choiceLabel);
+        nextScenario = await this.routineGenerator.generate(combinedState.day, combinedState.profile, combinedState.stats, recentHistory);
       }
       
       // 3. Update State (Fase 15.17: Check for Ending)
@@ -123,6 +124,24 @@ export class GameEngineCore {
 
       return finalState;
     }
+
+    return combinedState;
+  }
+
+  /**
+   * @method processTurnSync
+   * @description Versi sinkron dari processTurn khusus untuk mode multiplayer/diplomasi
+   * di mana skenario berikutnya ditentukan secara eksternal (oleh Host).
+   */
+  processTurnSync(prevState: GameState, option: ScenarioOption): GameState {
+    const nextStats = this.calculator.calculate(prevState.stats, option.impact, prevState.day);
+    const turnUpdates = StateManager.updateTurn(prevState, nextStats, option);
+    
+    const combinedState = {
+      ...prevState,
+      ...turnUpdates,
+      profile: ProfileService.analyze(nextStats).title
+    } as GameState;
 
     return combinedState;
   }

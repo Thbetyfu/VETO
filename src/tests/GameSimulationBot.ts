@@ -1,8 +1,8 @@
-import { GameEngineCore } from '../lib/engine/GameEngineCore';
-import { StateManager } from '../lib/engine/StateManager';
+import { GameEngineCore } from '../lib/engine/core/GameEngineCore';
+import { StateManager } from '../lib/engine/core/StateManager';
 import { GameState, ScenarioOption } from '../types/scenario';
-import { ImpactCalculator } from '../lib/engine/ImpactCalculator';
-import { ScenarioPicker } from '../lib/engine/ScenarioPicker';
+import { ImpactCalculator } from '../lib/engine/logic/ImpactCalculator';
+import { ScenarioPicker } from '../lib/engine/logic/ScenarioPicker';
 import { IAIService } from '../lib/ai/WebLLMService';
 
 const dummyAIService: IAIService = {
@@ -25,17 +25,18 @@ class GameSimulationBot {
     this.engine = new GameEngineCore(new ImpactCalculator(), new ScenarioPicker(), dummyAIService);
     // Initialize starting state
     this.state = {
-      day: 0,
+      day: 1,
       stats: { law: 50, humanity: 50, order: 50, budget: 50 },
       history: [],
+      statsHistory: [{ day: 1, law: 50, humanity: 50, order: 50, budget: 50 }],
       isGameOver: false,
       isReportOpen: false,
       gameOverReason: '',
       lastChoice: null,
       normalStreak: 0,
       activeFlags: [],
-      profile: 'Pemimpin Transisional',
-      currentScenario: null
+      profile: 'Pragmatis Moderat',
+      currentScenario: null as any
     };
     this.strategy = strategy;
   }

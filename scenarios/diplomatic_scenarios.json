@@ -1,0 +1,244 @@
+[
+  {
+    "id": "DIP-001",
+    "type": "normal",
+    "title": "Perselisihan Batas Laut",
+    "narrative": "Negara tetangga mengklaim sepihak jalur laut yang selama ini menjadi koridor ekspor utama Anda. Mereka mengerahkan kapal patroli di perairan sengketa. Dunia internasional menunggu respons Anda.",
+    "context_tags": ["Diplomacy", "Territory"],
+    "is_diplomatic": true,
+    "diplomatic_pressure": {
+      "law": -4,
+      "humanity": -2,
+      "order": -6,
+      "budget": -5
+    },
+    "options": [
+      {
+        "id": "DIP-001-A",
+        "label": "Ajukan ke Mahkamah Internasional",
+        "impact": { "law": 12, "humanity": 5, "order": -3, "budget": -8 },
+        "legal_basis": "UNCLOS Art. 279 — Penyelesaian Sengketa Damai.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": 6, "humanity": 3, "order": -2, "budget": -4 }
+      },
+      {
+        "id": "DIP-001-B",
+        "label": "Kirim Armada Militer",
+        "impact": { "law": -5, "humanity": -8, "order": 10, "budget": -12 },
+        "legal_basis": "Hak Pertahanan Diri — Piagam PBB Art. 51.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": -8, "humanity": -10, "order": -8, "budget": -6 }
+      },
+      {
+        "id": "DIP-001-C",
+        "label": "Negosiasi Bilateral Tertutup",
+        "impact": { "law": 4, "humanity": 7, "order": 3, "budget": -3 },
+        "legal_basis": "Perjanjian Persahabatan ASEAN.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": 4, "humanity": 7, "order": 3, "budget": 2 }
+      },
+      {
+        "id": "DIP-001-D",
+        "label": "Biarkan & Eksploitasi Diam-diam",
+        "impact": { "law": -15, "humanity": -5, "order": -4, "budget": 8 },
+        "legal_basis": "Pelanggaran Perjanjian Internasional — Risiko Sanksi.",
+        "is_trap": true,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": -12, "humanity": -8, "order": -5, "budget": 4 }
+      }
+    ]
+  },
+  {
+    "id": "DIP-002",
+    "type": "normal",
+    "title": "Perjanjian Perdagangan Bebas",
+    "narrative": "Pemimpin negara mitra mengusulkan perjanjian perdagangan bebas yang menguntungkan secara ekonomi, namun mensyaratkan pembatasan hak buruh lokal. Keputusan Anda akan memengaruhi neraca dagang mitra dagang Anda juga.",
+    "context_tags": ["Economy", "Diplomacy"],
+    "is_diplomatic": true,
+    "diplomatic_pressure": {
+      "law": -2,
+      "humanity": -3,
+      "order": 0,
+      "budget": -4
+    },
+    "options": [
+      {
+        "id": "DIP-002-A",
+        "label": "Tandatangani Perjanjian Penuh",
+        "impact": { "law": -6, "humanity": -10, "order": 4, "budget": 15 },
+        "legal_basis": "WTO Agreement on Trade in Services.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": -3, "humanity": -5, "order": 2, "budget": 12 }
+      },
+      {
+        "id": "DIP-002-B",
+        "label": "Negosiasi Ulang Klausul Buruh",
+        "impact": { "law": 8, "humanity": 10, "order": -2, "budget": 4 },
+        "legal_basis": "ILO Fundamental Conventions.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": 5, "humanity": 8, "order": -1, "budget": 2 }
+      },
+      {
+        "id": "DIP-002-C",
+        "label": "Tolak & Lindungi Pasar Domestik",
+        "impact": { "law": 5, "humanity": 8, "order": -3, "budget": -8 },
+        "legal_basis": "Prinsip Kedaulatan Ekonomi Nasional.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": 3, "humanity": 4, "order": -5, "budget": -10 }
+      }
+    ]
+  },
+  {
+    "id": "DIP-003",
+    "type": "crucial",
+    "title": "Krisis Pengungsi Lintas Batas",
+    "narrative": "Konflik bersenjata di negara tetangga memaksa jutaan pengungsi menyeberangi perbatasan. Negara mitra Anda menghadapi dilema yang sama. Kebijakan Anda hari ini akan membentuk norma kawasan untuk dekade mendatang.",
+    "context_tags": ["Humanitarian", "Diplomacy", "Crisis"],
+    "is_diplomatic": true,
+    "diplomatic_pressure": {
+      "law": -6,
+      "humanity": -8,
+      "order": -10,
+      "budget": -8
+    },
+    "options": [
+      {
+        "id": "DIP-003-A",
+        "label": "Buka Perbatasan & Beri Suaka Penuh",
+        "impact": { "law": 10, "humanity": 20, "order": -12, "budget": -15 },
+        "legal_basis": "Konvensi Pengungsi 1951 — Non-refoulement.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": 8, "humanity": 15, "order": -6, "budget": -8 }
+      },
+      {
+        "id": "DIP-003-B",
+        "label": "Koordinasi Internasional & Bagi Beban",
+        "impact": { "law": 8, "humanity": 12, "order": -4, "budget": -6 },
+        "legal_basis": "Global Compact on Refugees (GCR).",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": 6, "humanity": 10, "order": -2, "budget": -4 }
+      },
+      {
+        "id": "DIP-003-C",
+        "label": "Tutup Perbatasan, Bangun Tembok",
+        "impact": { "law": -15, "humanity": -20, "order": 12, "budget": -5 },
+        "legal_basis": "Pelanggaran Hukum Internasional Kemanusiaan.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": -10, "humanity": -15, "order": 8, "budget": 2 }
+      },
+      {
+        "id": "DIP-003-D",
+        "label": "Alihkan ke Negara Ketiga (Cuci Tangan)",
+        "impact": { "law": -10, "humanity": -15, "order": 5, "budget": 2 },
+        "legal_basis": "Manuver Diplomatik Tanpa Dasar Hukum.",
+        "is_trap": true,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": -8, "humanity": -12, "order": 4, "budget": 3 }
+      }
+    ]
+  },
+  {
+    "id": "DIP-004",
+    "type": "normal",
+    "title": "Embargo Teknologi Semikonduktor",
+    "narrative": "Negara adidaya memberlakukan embargo teknologi chip canggih. Negara mitra Anda dalam koalisi menghadapi tekanan yang sama. Apakah kalian akan bersatu menghadapinya, atau masing-masing cari jalan sendiri?",
+    "context_tags": ["Technology", "Geopolitics"],
+    "is_diplomatic": true,
+    "diplomatic_pressure": {
+      "law": -3,
+      "humanity": -2,
+      "order": -4,
+      "budget": -10
+    },
+    "options": [
+      {
+        "id": "DIP-004-A",
+        "label": "Bangun Koalisi Teknologi Mandiri",
+        "impact": { "law": 6, "humanity": 5, "order": 4, "budget": -10 },
+        "legal_basis": "Prinsip Otonomi Teknologi & Kedaulatan Digital.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": 8, "humanity": 6, "order": 5, "budget": -6 }
+      },
+      {
+        "id": "DIP-004-B",
+        "label": "Negosiasi Bilateral dengan Adidaya",
+        "impact": { "law": 4, "humanity": 2, "order": 5, "budget": 3 },
+        "legal_basis": "Perjanjian Bilateral Perdagangan.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": -2, "humanity": -3, "order": 2, "budget": 4 }
+      },
+      {
+        "id": "DIP-004-C",
+        "label": "Patuhi Embargo, Kurangi Ketergantungan",
+        "impact": { "law": 8, "humanity": 3, "order": 2, "budget": -6 },
+        "legal_basis": "Kepatuhan Hukum Internasional.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": 5, "humanity": 2, "order": 0, "budget": -8 }
+      }
+    ]
+  },
+  {
+    "id": "DIP-005",
+    "type": "crucial",
+    "title": "Operasi Militer Lintas Batas",
+    "narrative": "Kelompok bersenjata yang bersembunyi di wilayah negara tetangga menyerang warga sipil Anda. Negara tetangga tidak mau atau tidak mampu menindak. Dunia menonton. Mitra koalisi Anda menghadapi ancaman serupa.",
+    "context_tags": ["Military", "Sovereignty", "Diplomacy"],
+    "is_diplomatic": true,
+    "diplomatic_pressure": {
+      "law": -8,
+      "humanity": -10,
+      "order": -12,
+      "budget": -8
+    },
+    "options": [
+      {
+        "id": "DIP-005-A",
+        "label": "Operasi Surgical Strike Terbatas",
+        "impact": { "law": -8, "humanity": -12, "order": 15, "budget": -14 },
+        "legal_basis": "Hak Bela Diri Proporsional — Piagam PBB Art. 51.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": -6, "humanity": -8, "order": 10, "budget": -10 }
+      },
+      {
+        "id": "DIP-005-B",
+        "label": "Minta Resolusi Dewan Keamanan PBB",
+        "impact": { "law": 15, "humanity": 8, "order": -4, "budget": -3 },
+        "legal_basis": "Piagam PBB Bab VII — Tindakan atas Ancaman Perdamaian.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": 12, "humanity": 6, "order": -2, "budget": -2 }
+      },
+      {
+        "id": "DIP-005-C",
+        "label": "Invasi Total — Gulingkan Pemerintah",
+        "impact": { "law": -20, "humanity": -25, "order": 8, "budget": -20 },
+        "legal_basis": "Agresi Militer — Pelanggaran Hukum Internasional Berat.",
+        "is_trap": true,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": -18, "humanity": -20, "order": -5, "budget": -15 }
+      },
+      {
+        "id": "DIP-005-D",
+        "label": "Embargo Ekonomi & Isolasi Diplomatik",
+        "impact": { "law": 8, "humanity": 5, "order": 4, "budget": -5 },
+        "legal_basis": "Sanksi Internasional Non-Militer.",
+        "is_trap": false,
+        "next_node": "DYNAMIC_NEXT",
+        "diplomatic_to_others": { "law": 6, "humanity": 4, "order": 3, "budget": -4 }
+      }
+    ]
+  }
+]

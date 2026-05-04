@@ -1,6 +1,6 @@
 import { IAIService } from './WebLLMService';
 import { ScenarioContext, PromptBuilder } from './PromptBuilder';
-import { StateTranslator } from '../engine/StateTranslator';
+import { StateTranslator } from '../engine/translators/StateTranslator';
 import { NarrativeResponse } from './WebLLMService';
 
 /**

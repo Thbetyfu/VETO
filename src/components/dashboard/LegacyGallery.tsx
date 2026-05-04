@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, ArrowLeft, History, Scale, Users, ShieldAlert, Wallet, Globe, Activity, Award } from 'lucide-react';
-import { PresidentLegacy } from '../lib/gun-bridge';
-import { p2pService } from '../lib/p2p/P2PService';
-import { AnalyticsService, GlobalStats } from '../lib/engine/AnalyticsService';
+import { PresidentLegacy } from '../../lib/gun-bridge';
+import { p2pService } from '../../lib/p2p/P2PService';
+import { AnalyticsService, GlobalStats } from '../../lib/engine/services/AnalyticsService';
 import { TelemetryDashboard } from './TelemetryDashboard';
 
 interface LegacyGalleryProps {

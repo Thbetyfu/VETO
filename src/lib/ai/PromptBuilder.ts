@@ -1,5 +1,5 @@
 import { Impact } from '../../types/scenario';
-import { StateTranslator } from '../engine/StateTranslator';
+import { StateTranslator } from '../engine/translators/StateTranslator';
 
 export interface ScenarioContext {
   stats: Impact;
@@ -8,6 +8,7 @@ export interface ScenarioContext {
   isRoutine?: boolean; 
   routineCategory?: string;
   routineDay?: number;
+  recentHistory?: string[];
   toneType?: 'CRISIS' | 'BUREAUCRATIC' | 'NORMAL' | string;
   realityKeyword?: string;
   activeFlags?: string[];
@@ -70,9 +71,14 @@ export class PromptBuilder {
 
     // Mode Routine Generator (JSON Output)
     if (context.isRoutine) {
+      let historyContext = "";
+      if (context.recentHistory && context.recentHistory.length > 0) {
+        historyContext = `\nSejarah Keputusan Terakhir (ingat ini untuk menyusun narasi agar terasa berkesinambungan):\n- ${context.recentHistory.join('\n- ')}\n`;
+      }
+
       const userPrompt = `Buat satu skenario tugas rutin Presiden RI pada hari ke-${context.routineDay}.
 Kategori: ${context.routineCategory}.
-Arketipe Presiden saat ini: ${context.profile}.
+Arketipe Presiden saat ini: ${context.profile}.${historyContext}
 
 ${semanticState}
 

@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Scale, Users, ShieldAlert, Wallet, Trophy } from 'lucide-react';
+import { Scale, Users, ShieldAlert, Wallet, Trophy, Globe, Activity } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useGameEngine } from './hooks/useGameEngine';
 import { useWebLLM } from './hooks/useWebLLM';
-import { ScenarioCard } from './components/ScenarioCard';
-import { StatItem } from './components/StatItem';
-import { GameOverScreen } from './components/GameOverScreen';
-import { EndingScreen } from './components/EndingScreen';
-import { AIFeedback } from './components/AIFeedback';
-import { Prologue } from './components/Prologue';
-import { MonthlyReport } from './components/MonthlyReport';
-import { CalendarService } from './lib/engine/CalendarService';
-import { ElectionNight } from './components/ElectionNight';
-import { LegacyGallery } from './components/LegacyGallery';
+import { ScenarioCard } from './components/gameplay/ScenarioCard';
+import { StatItem } from './components/gameplay/StatItem';
+import { GameOverScreen } from './components/screens/GameOverScreen';
+import { EndingScreen } from './components/screens/EndingScreen';
+import { AIFeedback } from './components/gameplay/AIFeedback';
+import { Prologue } from './components/screens/Prologue';
+import { MonthlyReport } from './components/screens/MonthlyReport';
+import { CalendarService } from './lib/engine/services/CalendarService';
+import { ElectionNight } from './components/screens/ElectionNight';
+import { LegacyGallery } from './components/dashboard/LegacyGallery';
+import { InteractiveTimeline } from './components/dashboard/InteractiveTimeline';
 import { p2pService } from './lib/p2p/P2PService';
-import { GlobalWorldStatus } from './components/GlobalWorldStatus';
+import { GlobalWorldStatus } from './components/multiplayer/GlobalWorldStatus';
+import { RoomLobby } from './components/multiplayer/RoomLobby';
 import type { ScenarioOption } from './types/scenario';
 
 /**
@@ -37,11 +39,15 @@ function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [playerName, setPlayerName] = useState('Presiden Anonim');
   const [showGallery, setShowGallery] = useState(false);
+  const [showTimeline, setShowTimeline] = useState(false);
   const [isHapticFlash, setIsHapticFlash] = useState(false);
   const [isElectionNight, setIsElectionNight] = useState(false);
 
   const { state, isLoading, makeChoice, restartGame, closeReport, multiplayer } = useGameEngine(aiService, playerName);
   const { stats, day, currentScenario, isGameOver, isReportOpen, gameOverReason, history } = state;
+
+  // True when player is in the multiplayer lobby (waiting for host to start)
+  const isInLobby = gameStarted && multiplayer.active && (!multiplayer.roomData || multiplayer.roomData.status === 'waiting');
 
   const handleStart = (name: string, mode: 'single' | 'multi', roomOptions?: any) => {
     setPlayerName(name);
@@ -116,6 +122,7 @@ function App() {
       <AnimatePresence>
         {!gameStarted && !showGallery && (
           <Prologue 
+            key="prologue"
             onStart={handleStart} 
             aiStatus={aiStatus}
             loadProgress={loadProgress}
@@ -125,12 +132,17 @@ function App() {
         {/* Room Lobby Overlay */}
         {gameStarted && multiplayer.active && (!multiplayer.roomData || multiplayer.roomData.status === 'waiting') && (
           <RoomLobby
-            roomId={multiplayer.roomId || ''}
+            key="lobby"
+            roomId={multiplayer.roomId || '...'}
             players={multiplayer.roomData?.players || {}}
             playerName={playerName}
-            isHost={Object.keys(multiplayer.roomData?.players || {}).sort((a, b) => 
-              (multiplayer.roomData?.players[a].joinedAt || 0) - (multiplayer.roomData?.players[b].joinedAt || 0)
-            )[0] === playerName}
+            isHost={(() => {
+              const players = multiplayer.roomData?.players || {};
+              const playerIds = Object.keys(players);
+              if (playerIds.length === 0) return true; // Default to host while loading
+              const sorted = playerIds.sort((a, b) => (players[a]?.joinedAt || 0) - (players[b]?.joinedAt || 0));
+              return sorted[0] === playerName;
+            })()}
             onStart={() => p2pService.startGame(multiplayer.roomId!)}
           />
         )}
@@ -140,6 +152,12 @@ function App() {
       <AnimatePresence>
         {showGallery && (
           <LegacyGallery onBack={() => setShowGallery(false)} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showTimeline && (
+          <InteractiveTimeline statsHistory={state.statsHistory} onClose={() => setShowTimeline(false)} />
         )}
       </AnimatePresence>
 
@@ -189,16 +207,30 @@ function App() {
         <div className="absolute bottom-[-15%] right-[-10%] w-[50%] h-[50%] bg-president-accent/8 blur-[160px] rounded-full" />
       </div>
 
-      {/* 4. LAYER: DASHBOARD HEADER */}
+      {/* 4. LAYER: DASHBOARD HEADER - Hidden during lobby */}
+      {!isInLobby && (
       <header className="fixed top-0 w-full z-40 flex items-center justify-between px-6 py-4 bg-president-dark/60 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center gap-4">
-          <button 
-            onClick={() => setShowGallery(true)}
-            className="p-2 rounded-full hover:bg-white/5 transition-colors text-president-gold"
-            title="Hall of Fame"
-          >
-            <Trophy size={20} />
-          </button>
+          <div className="flex gap-3">
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowGallery(true)}
+              className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/50 border border-president-gold/20 hover:border-president-gold/50 hover:bg-president-gold/10 transition-colors group"
+            >
+              <Trophy size={14} className="text-president-gold group-hover:animate-pulse" />
+              <span className="text-[10px] font-bold tracking-widest text-president-gold uppercase">Legacy</span>
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowTimeline(true)}
+              className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/50 border border-blue-400/20 hover:border-blue-400/50 hover:bg-blue-400/10 transition-colors group"
+            >
+              <Activity size={14} className="text-blue-400 group-hover:animate-pulse" />
+              <span className="text-[10px] font-bold tracking-widest text-blue-400 uppercase">Timeline</span>
+            </motion.button>
+          </div>
           <div className="h-4 w-[1px] bg-white/10" />
           <div className="text-left">
             <h1 className="text-sm font-bold text-white tracking-tighter uppercase">VETO Terminal</h1>
@@ -209,7 +241,7 @@ function App() {
         </div>
 
         <div className="w-full lg:w-auto order-last lg:order-none mt-4 lg:mt-0">
-          <GlobalWorldStatus />
+          <GlobalWorldStatus activePeers={Object.keys(multiplayer.roomData?.players || {}).length || 1} />
         </div>
         
         <div className="flex items-center gap-8 md:gap-12">
@@ -219,9 +251,31 @@ function App() {
           <StatItem icon={<Wallet size={18} />} label="Budget" value={stats.budget} themeColor="emerald" />
         </div>
       </header>
+      )}
 
-      {/* 5. LAYER: MAIN GAMEPLAY */}
-      <main className="max-w-md w-full pt-20 pb-12">
+      {/* 5. LAYER: MAIN GAMEPLAY - Hidden during lobby */}
+      {!isInLobby && (
+      <main className="max-w-md w-full pt-24 pb-12">
+        {/* Diplomatic Notification (Fase 15: Cross-Player Influence) */}
+        <AnimatePresence>
+          {multiplayer.diplomaticMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="mb-6 p-4 rounded-xl bg-president-gold/10 border border-president-gold/20 backdrop-blur-sm"
+            >
+              <div className="flex gap-3">
+                <div className="mt-1">
+                  <Globe className="text-president-gold animate-pulse" size={16} />
+                </div>
+                <div className="text-xs text-president-gold leading-relaxed font-medium">
+                  {multiplayer.diplomaticMessage}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <AnimatePresence mode="wait">
           {isGameOver ? (
             <motion.div 
@@ -314,8 +368,10 @@ function App() {
           )}
         </AnimatePresence>
       </main>
+      )}
 
-      {/* 6. LAYER: FOOTER STATUS */}
+      {/* 6. LAYER: FOOTER STATUS - Hidden during lobby */}
+      {!isInLobby && (
       <footer className="fixed bottom-4 text-slate-600 text-[10px] uppercase tracking-[0.25em] flex items-center gap-3">
         <span>VETO V0.2</span>
         <span className="w-1 h-1 rounded-full bg-slate-800" />
@@ -323,6 +379,7 @@ function App() {
           {aiStatus === 'ready' ? '🟢 AI ONLINE' : isStuck ? '⚡ HEURISTIC ACTIVE' : aiStatus === 'loading' ? `⏳ AI SYNC ${loadProgress}%` : '⚡ HEURISTIC'}
         </span>
       </footer>
+      )}
     </div>
   );
 }

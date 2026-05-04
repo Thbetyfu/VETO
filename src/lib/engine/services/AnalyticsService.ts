@@ -1,4 +1,4 @@
-import { PresidentLegacy } from '../gun-bridge';
+import { PresidentLegacy } from '../../gun-bridge';
 
 export interface GlobalStats {
   totalPresidents: number;

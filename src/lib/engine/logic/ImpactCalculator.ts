@@ -1,5 +1,5 @@
-import { Impact } from '../../types/scenario';
-import { IImpactCalculator } from './types';
+import { Impact } from '../../../types/scenario';
+import { IImpactCalculator } from '../core/types';
 
 /**
  * @class ImpactCalculator

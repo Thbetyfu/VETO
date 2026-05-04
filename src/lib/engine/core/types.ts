@@ -1,4 +1,4 @@
-import { Impact, Scenario, ScenarioOption } from '../../types/scenario';
+import { Impact, Scenario, ScenarioOption } from '../../../types/scenario';
 
 /**
  * @interface IImpactCalculator
@@ -14,7 +14,8 @@ export interface IImpactCalculator {
  * @description SRP: Khusus bertanggung jawab untuk logika pemilihan skenario berikutnya.
  */
 export interface IScenarioPicker {
-  pick(historyIds: string[], streak: number, activeFlags: string[], day: number, profile: string, globalMetrics?: any): { scenario: Scenario | null; isPoolEmpty: boolean };
+  scenarios: Scenario[];
+  pick(historyIds: string[], streak: number, activeFlags: string[], day: number, profile: string, globalMetrics?: any): Promise<{ scenario: Scenario | null; isPoolEmpty: boolean }>;
 }
 
 /**
