@@ -121,6 +121,19 @@ function App() {
             loadProgress={loadProgress}
           />
         )}
+
+        {/* Room Lobby Overlay */}
+        {gameStarted && multiplayer.active && (!multiplayer.roomData || multiplayer.roomData.status === 'waiting') && (
+          <RoomLobby
+            roomId={multiplayer.roomId || ''}
+            players={multiplayer.roomData?.players || {}}
+            playerName={playerName}
+            isHost={Object.keys(multiplayer.roomData?.players || {}).sort((a, b) => 
+              (multiplayer.roomData?.players[a].joinedAt || 0) - (multiplayer.roomData?.players[b].joinedAt || 0)
+            )[0] === playerName}
+            onStart={() => p2pService.startGame(multiplayer.roomId!)}
+          />
+        )}
       </AnimatePresence>
 
       {/* 1b. LAYER: HALL OF FAME (Fase 9) */}

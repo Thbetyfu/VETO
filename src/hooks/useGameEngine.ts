@@ -160,7 +160,11 @@ export const useGameEngine = (aiService: IAIService, playerName: string) => {
       if (data.currentScenarioId && data.currentScenarioId !== state.currentScenario?.id) {
         const newScenario = SCENARIOS.find(s => s.id === data.currentScenarioId);
         if (newScenario) {
-          setState(prev => ({ ...prev, currentScenario: newScenario as Scenario, day: prev.day + 1 }));
+          setState(prev => ({ 
+            ...prev, 
+            currentScenario: newScenario as Scenario, 
+            day: prev.day === 1 ? 1 : prev.day + 1 // Cegah double increment di hari pertama
+          }));
           setTimeLeft(20);
           setIsWaiting(false);
         }

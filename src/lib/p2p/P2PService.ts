@@ -22,6 +22,7 @@ export interface IP2PService {
   joinRoom(roomId: string, playerName: string, onUpdate: (roomData: any) => void): void;
   submitRoomChoice(roomId: string, playerName: string, scenarioId: string, choiceId: string): void;
   advanceRoom(roomId: string, nextScenarioId: string): void;
+  startGame(roomId: string): void;
 }
 
 /**
@@ -299,6 +300,16 @@ export class GunP2PService implements IP2PService {
     });
     // Reset respons untuk turn berikutnya
     roomRef.get('responses').put(null);
+  }
+
+  /**
+   * Diplomacy Mode: Host memulai permainan secara resmi.
+   */
+  startGame(roomId: string): void {
+    this.db.get(`veto/rooms/${roomId}`).put({
+      status: 'playing',
+      startedAt: Date.now()
+    });
   }
 }
 
